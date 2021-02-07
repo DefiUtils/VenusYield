@@ -10,7 +10,7 @@ Now, let me show you how it looks like and how it works:
 
 *Keep in mind that, this is an example balance and unfortunately not my real one...
 
-<img src="https://github.com/J1Mtonic/VenusYield/blob/main/Pics/VenusYield.1.png" width="300" height="600">
+<img src="https://github.com/J1Mtonic/VenusYield/blob/main/Pics/VenusYield.1.png" width="222" height="516">
 
 "VenusYield" lists all supported assets on "Venus Protocol" and gets information from a given (Settings) BSC Public Wallet Address.
 Note#1: Remember, never-ever share your private key or your mnemonic phrase!
