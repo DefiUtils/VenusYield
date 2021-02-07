@@ -309,12 +309,13 @@ namespace VenusYield
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Open Sans", 7F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.label6.Location = new System.Drawing.Point(373, 190);
+            this.label6.Location = new System.Drawing.Point(373, 181);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(256, 95);
+            this.label6.Size = new System.Drawing.Size(268, 133);
             this.label6.TabIndex = 13;
-            this.label6.Text = "If this App helps you to sleep better,\r\nand could avoid tough 10% liquidation,\r\np" +
-    "lease, consider a donation.\r\n\r\nThank you so much! :-)\r\n";
+            this.label6.Text = "If this App helps you to sleep better,\r\nand could avoid a tough 10% liquidation,\r" +
+    "\nplease, consider a donation.\r\n\r\nThank you so much! :-)\r\n\r\n<-- QRcode for my BEP" +
+    "20 address\r\n";
             // 
             // lGithub
             // 

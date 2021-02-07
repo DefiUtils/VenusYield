@@ -1,10 +1,10 @@
-# VenusYield v0.1
+﻿# VenusYield
 
 ["Venus Protocol"](https://venus.io) is a decentralized crypto-money market for Lending and Borrow/Mint, running on ["Binance Smart Chain"](https://www.binance.org/en/smartChain).
 
 The aim of this "VenusYield" APP is to warn you through a Telegram message when your Supply/Borrow/Mint ratio is outside a given percentage in order to avoid a liquidation (currently a tough 10% of your underwater collaterals).
 
-"VenusYield" is released as an open source software developed on Visual C# 16.9; Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.1"](https://github.com/J1Mtonic/VenusYield/blob/main/VenusYield.v1.0.Win10.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
+"VenusYield" is released as an open source software developed on Visual C# 16.9; Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.2"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.2.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
 
 Now, let me show you how it looks like and how it works:
 
@@ -19,7 +19,7 @@ Then it fetches information from different places:
  - Price vTokens: Binance API (USDT pairs)(real-time) --> Wanted to extract it from there to gain some reaction time against 'Venus Price Oracle'.
  - Price StableCoins: Venus API
  - Supply/Borrow/Mint/Vault: Querying (Web3) Binance Smartchain with Nethereum .Net library and using the Binance free 'BSCendpoint'.
- - Limit: Calculation is given by (TotalBorrowInUSD + BorrowVAI + VAIvault) / (TotalSupplyInUSD * 0.6);
+ - Limit: Calculation is given by (TotalBorrowInUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyInUSD * 0.6);
  
 Let´s have an eye on 'Settings':
  
@@ -41,10 +41,14 @@ Information is 'autosaved' so just close that window. Config file (VenusYield.js
 
 After some seconds you will see your Venus Yield information!
 
-If you have some doubts, or want to share your thoughts/requests, find me on [Venus Community](https://community.venus.io).
+If you have some doubts, or want to share your thoughts/requests, find me on [Venus Community](https://community.venus.io/c/uncategorized/1).
 
 And remember:
 - Never-ever share your private key or your mnemonic phrase!
 - Don´t trust. Verify.
 - #BUIDL, #HODL & #BTFD
 - Donations are always very welcome! :)
+
+CHANGES from v0.1 to v0.2
+- fixed wrong calculation on Limit% when VAI in Vault is different from VAI Minted (thanks @YongeNoodle & @sosolean for reporting)
+- fixed issue when updating settings during a balance update (thanks @mikibighead for reporting)

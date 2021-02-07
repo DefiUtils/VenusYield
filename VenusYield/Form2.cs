@@ -30,7 +30,7 @@ namespace VenusYield
                     nRefreshMins.Text = mySettings.RefreshRate.ToString();
                 }
             }
-            catch { }
+            catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
         }
 
         private void lGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -61,7 +61,7 @@ namespace VenusYield
                     telegramMsg = Telegram.FromJson(webclient.DownloadString(telegramGetUpdates));
                     tbTelegramChatID.Text = telegramMsg.Result[0].Message.Chat.Id.ToString();
                 }
-                catch { }
+                catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
             }
             else MessageBox.Show("'Telegram Bot' cannot be empty!");
         }
