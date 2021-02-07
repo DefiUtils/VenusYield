@@ -23,7 +23,7 @@ Then it fetches information from different places:
  
 Let´s have an eye on 'Settings':
  
-<img src="https://github.com/J1Mtonic/VenusYield/blob/main/Pics/VenusYield.2.png" width="340" height="215">
+<img src="https://github.com/J1Mtonic/VenusYield/blob/main/Pics/VenusYield.2.png" width="500" height="220">
 
 - BSC Public Address: Put Public BEP20 Wallet Address in here and remember Note#1.
 - Borrow Reporting and Refresh Rate will give you some freedom for tuning alerts. Try to no overexpose yourself too much...
