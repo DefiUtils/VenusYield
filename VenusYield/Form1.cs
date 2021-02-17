@@ -24,7 +24,7 @@ namespace VenusYield
 
         readonly string VenusAPIvToken = "https://api.venus.io/api/vtoken";
         readonly string BinanceAPIticker = "https://api.binance.com/api/v3/ticker/24hr?symbol=";
-        readonly string BSCendpoint = "https://bsc-dataseed1.binance.org";        
+        readonly string[] BSCendpoints = { "https://bsc-dataseed.binance.org", "https://bsc-dataseed1.binance.org", "https://bsc-dataseed2.binance.org", "https://bsc-dataseed3.binance.org", "https://bsc-dataseed4.binance.org" };
 
         readonly string BSCvXVScontract = "0x151b1e2635a717bcdc836ecd6fbb62b674fe3e1d";
         readonly string BSCvSXPcontract = "0x2fF3d0F6990a40261c66E1ff2017aCBc282EB6d0";
@@ -78,11 +78,14 @@ namespace VenusYield
                     RefreshMins = mySettings.RefreshRate;
                 }                
             }
-            catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
+            catch (Exception ex) { Console.WriteLine("#2 {0}", ex.Message.ToString()); }
         }
 
         public async Task<vTokenBalances> tokenBalances(string Symbol, string BSCcontract, VenusAPIvTokenService vTokenService)
         {
+            Random rand = new Random();
+            int index = rand.Next(BSCendpoints.Length);
+            string BSCendpoint = BSCendpoints[index];
             Web3 web3 = new Web3(BSCendpoint);
             vTokenBalances tokenBalances = new vTokenBalances();
             BinancePriceChange binancePriceChange = new BinancePriceChange();
@@ -112,7 +115,7 @@ namespace VenusYield
                 tokenBalances.SupplyUSD = tokenBalances.PriceUSD * tokenBalances.Supply;
                 tokenBalances.BorrowUSD = tokenBalances.PriceUSD * tokenBalances.Borrow;
             }
-            catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
+            catch (Exception ex) { Console.WriteLine("#0 {0}", ex.Message.ToString()); bgwVenusYield.CancelAsync(); }
 
             return await Task.FromResult<vTokenBalances>(tokenBalances);
         }
@@ -123,6 +126,9 @@ namespace VenusYield
             vTokenBalances mytokenBalances = new vTokenBalances();
             VenusAPIvTokenService vTokenService = new VenusAPIvTokenService();
             WebClient webclient = new WebClient();
+            Random rand = new Random();
+            int index = rand.Next(BSCendpoints.Length);
+            string BSCendpoint = BSCendpoints[index];
             Web3 web3 = new Web3(BSCendpoint);
             var TelegramMSG = "https://api.telegram.org/bot" + TelegramBot + "/sendMessage?chat_id=" + TelegramChatID.ToString() + "&parse_mode=HTML&text=";
 
@@ -132,9 +138,10 @@ namespace VenusYield
                 {
                     double TotalSupplyUSD = 0.0;
                     double TotalBorrowUSD = 0.0;
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     vTokenService = VenusAPIvTokenService.FromJson(webclient.DownloadString(VenusAPIvToken));
-                    if (bgwVenusYield.CancellationPending) { break; }
-                    mytokenBalances = await tokenBalances("XVS", BSCvXVScontract, null); 
+                    mytokenBalances = await tokenBalances("XVS", BSCvXVScontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceXVS.InvokeRequired)
                         lPriceXVS.Invoke(new MethodInvoker(delegate { lPriceXVS.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
@@ -142,8 +149,8 @@ namespace VenusYield
                         lSupplyXVS.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyXVS.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " XVS"; else lSupplyXVS.Text = "---"; }));
                     if (lBorrowXVS.InvokeRequired)
                         lBorrowXVS.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowXVS.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " XVS"; else lBorrowXVS.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("BTC", BSCvBTCcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceBTC.InvokeRequired)
                         lPriceBTC.Invoke(new MethodInvoker(delegate { lPriceBTC.Text = "$" + mytokenBalances.PriceUSD.ToString("N0", CultureInfo.InvariantCulture); }));
@@ -151,8 +158,8 @@ namespace VenusYield
                         lSupplyBTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBTC.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BTC"; else lSupplyBTC.Text = "---"; }));
                     if (lBorrowBTC.InvokeRequired)
                         lBorrowBTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBTC.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BTC"; else lBorrowBTC.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("ETH", BSCvETHcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceETH.InvokeRequired)
                         lPriceETH.Invoke(new MethodInvoker(delegate { lPriceETH.Text = "$" + mytokenBalances.PriceUSD.ToString("N0", CultureInfo.InvariantCulture); }));
@@ -160,8 +167,8 @@ namespace VenusYield
                         lSupplyETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyETH.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " ETH"; else lSupplyETH.Text = "---"; }));
                     if (lBorrowETH.InvokeRequired)
                         lBorrowETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowETH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " ETH"; else lBorrowETH.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("DOT", BSCvDOTcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceDOT.InvokeRequired)
                         lPriceDOT.Invoke(new MethodInvoker(delegate { lPriceDOT.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
@@ -169,8 +176,8 @@ namespace VenusYield
                         lSupplyDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDOT.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lSupplyDOT.Text = "---"; }));
                     if (lBorrowDOT.InvokeRequired)
                         lBorrowDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDOT.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lBorrowDOT.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("XRP", BSCvXRPcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceXRP.InvokeRequired)
                         lPriceXRP.Invoke(new MethodInvoker(delegate { lPriceXRP.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
@@ -178,8 +185,8 @@ namespace VenusYield
                         lSupplyXRP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyXRP.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " XRP"; else lSupplyXRP.Text = "---"; }));
                     if (lBorrowXRP.InvokeRequired)
                         lBorrowXRP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowXRP.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " XRP"; else lBorrowXRP.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("LTC", BSCvLTCcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceLTC.InvokeRequired)
                         lPriceLTC.Invoke(new MethodInvoker(delegate { lPriceLTC.Text = "$" + mytokenBalances.PriceUSD.ToString("N1", CultureInfo.InvariantCulture); }));
@@ -187,8 +194,8 @@ namespace VenusYield
                         lSupplyLTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyLTC.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " LTC"; else lSupplyLTC.Text = "---"; }));
                     if (lBorrowLTC.InvokeRequired)
                         lBorrowLTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowLTC.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " LTC"; else lBorrowLTC.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("LINK", BSCvLINKcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceLINK.InvokeRequired)
                         lPriceLINK.Invoke(new MethodInvoker(delegate { lPriceLINK.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
@@ -196,8 +203,8 @@ namespace VenusYield
                         lSupplyLINK.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyLINK.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " LINK"; else lSupplyLINK.Text = "---"; }));
                     if (lBorrowLINK.InvokeRequired)
                         lBorrowLINK.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowLINK.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " LINK"; else lBorrowLINK.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("BCH", BSCvBCHcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceBCH.InvokeRequired)
                         lPriceBCH.Invoke(new MethodInvoker(delegate { lPriceBCH.Text = "$" + mytokenBalances.PriceUSD.ToString("N1", CultureInfo.InvariantCulture); }));
@@ -205,8 +212,8 @@ namespace VenusYield
                         lSupplyBCH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBCH.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BCH"; else lSupplyBCH.Text = "---"; }));
                     if (lBorrowBCH.InvokeRequired)
                         lBorrowBCH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBCH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BCH"; else lBorrowBCH.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("BNB", BSCvBNBcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceBNB.InvokeRequired)
                         lPriceBNB.Invoke(new MethodInvoker(delegate { lPriceBNB.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
@@ -214,8 +221,8 @@ namespace VenusYield
                         lSupplyBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBNB.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lSupplyBNB.Text = "---"; }));
                     if (lBorrowBNB.InvokeRequired)
                         lBorrowBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBNB.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lBorrowBNB.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("FIL", BSCvFILcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceFIL.InvokeRequired)
                         lPriceFIL.Invoke(new MethodInvoker(delegate { lPriceFIL.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
@@ -223,8 +230,8 @@ namespace VenusYield
                         lSupplyFIL.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyFIL.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " FIL"; else lSupplyFIL.Text = "---"; }));
                     if (lBorrowFIL.InvokeRequired)
                         lBorrowFIL.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowFIL.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " FIL"; else lBorrowFIL.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("SXP", BSCvSXPcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceSXP.InvokeRequired)
                         lPriceSXP.Invoke(new MethodInvoker(delegate { lPriceSXP.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
@@ -232,8 +239,8 @@ namespace VenusYield
                         lSupplySXP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplySXP.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " SXP"; else lSupplySXP.Text = "---"; }));
                     if (lBorrowSXP.InvokeRequired)
                         lBorrowSXP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowSXP.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " SXP"; else lBorrowSXP.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("BETH", BSCvBETHcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceBETH.InvokeRequired)
                         lPriceBETH.Invoke(new MethodInvoker(delegate { lPriceBETH.Text = "$" + mytokenBalances.PriceUSD.ToString("N0", CultureInfo.InvariantCulture); }));
@@ -241,8 +248,8 @@ namespace VenusYield
                         lSupplyBETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBETH.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BETH"; else lSupplyBETH.Text = "---"; }));
                     if (lBorrowBETH.InvokeRequired)
                         lBorrowBETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBETH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BETH"; else lBorrowBETH.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("USDT", BSCvUSDTcontract, vTokenService);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceUSDT.InvokeRequired)
                         lPriceUSDT.Invoke(new MethodInvoker(delegate { lPriceUSDT.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
@@ -250,8 +257,8 @@ namespace VenusYield
                         lSupplyUSDT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyUSDT.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " USDT"; else lSupplyUSDT.Text = "---"; }));
                     if (lBorrowUSDT.InvokeRequired)
                         lBorrowUSDT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowUSDT.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " USDT"; else lBorrowUSDT.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("USDC", BSCvUSDCcontract, vTokenService);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceUSDC.InvokeRequired)
                         lPriceUSDC.Invoke(new MethodInvoker(delegate { lPriceUSDC.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
@@ -259,8 +266,8 @@ namespace VenusYield
                         lSupplyUSDC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyUSDC.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " USDC"; else lSupplyUSDC.Text = "---"; }));
                     if (lBorrowUSDC.InvokeRequired)
                         lBorrowUSDC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowUSDC.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " USDC"; else lBorrowUSDC.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("DAI", BSCvDAIcontract, vTokenService);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceDAI.InvokeRequired)
                         lPriceDAI.Invoke(new MethodInvoker(delegate { lPriceDAI.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
@@ -268,8 +275,8 @@ namespace VenusYield
                         lSupplyDAI.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDAI.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DAI"; else lSupplyDAI.Text = "---"; }));
                     if (lBorrowDAI.InvokeRequired)
                         lBorrowDAI.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDAI.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DAI"; else lBorrowDAI.Text = "---"; }));
-                    if (bgwVenusYield.CancellationPending) { break; }
                     mytokenBalances = await tokenBalances("BUSD", BSCvBUSDcontract, vTokenService);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
                     if (lPriceBUSD.InvokeRequired)
                         lPriceBUSD.Invoke(new MethodInvoker(delegate { lPriceBUSD.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
@@ -278,42 +285,40 @@ namespace VenusYield
                     if (lBorrowBUSD.InvokeRequired)
                         lBorrowBUSD.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBUSD.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BUSD"; else lBorrowBUSD.Text = "---"; }));
                     //VAI
-                    if (bgwVenusYield.CancellationPending) { break; }
                     double PriceVAI = 1.0;
                     Contract VAIContract = web3.Eth.GetContract(ABIVAItoken, BSCVAIcontract);
                     Function VAIBorrowFunction = VAIContract.GetFunction("balanceOf");
                     dynamic VAIBorrowResult = await VAIBorrowFunction.CallAsync<dynamic>(BSCAddress);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     double BorrowVAI = (double)VAIBorrowResult / 1E+18;
                     if (lPriceVAI.InvokeRequired)
                         lPriceVAI.Invoke(new MethodInvoker(delegate { lPriceVAI.Text = "$" + PriceVAI.ToString("N0", CultureInfo.InvariantCulture); }));
                     if (lBorrowVAI.InvokeRequired)
                         lBorrowVAI.Invoke(new MethodInvoker(delegate { if (BorrowVAI != 0) lBorrowVAI.Text = BorrowVAI.ToString("N2", CultureInfo.InvariantCulture) + " VAI"; else lBorrowVAI.Text = "---"; }));
                     //VAIminted
-                    if (bgwVenusYield.CancellationPending) { break; }
                     Contract VAImintedContract = web3.Eth.GetContract(ABIUnitroller, BSCUnitrollercontract);
                     Function VAImintedFunction = VAImintedContract.GetFunction("mintedVAIs");
                     dynamic VAImintedResult = await VAImintedFunction.CallAsync<dynamic>(BSCAddress);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     double VAIminted = (double)VAImintedResult / 1E+18;
                     //VAIvault
-                    if (bgwVenusYield.CancellationPending) { break; }
                     Contract VAIvaultContract = web3.Eth.GetContract(ABIVAIvault, BSCVAIvaultcontract);
                     Function VAIvaultFunction = VAIvaultContract.GetFunction("userInfo");
                     dynamic VAIvaultResult = await VAIvaultFunction.CallAsync<dynamic>(BSCAddress);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     double VAIvault = (double)VAIvaultResult / 1E+18;
                     if (lVAIvault.InvokeRequired)
                         lVAIvault.Invoke(new MethodInvoker(delegate { lVAIvault.Text = "VAI vault: " + "$" + VAIvault.ToString("N0", CultureInfo.InvariantCulture); }));
                     //Balance
-                    if (bgwVenusYield.CancellationPending) { break; }
                     if (lBalance.InvokeRequired)
                         lBalance.Invoke(new MethodInvoker(delegate { lBalance.Text = "Balance: " + "$" + TotalSupplyUSD.ToString("N0", CultureInfo.InvariantCulture); }));
                     //Limit
-                    if (bgwVenusYield.CancellationPending) { break; }
                     var BorrowLimit = (TotalBorrowUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyUSD * 0.6);
                     if (lLimit.InvokeRequired) lLimit.Invoke(new MethodInvoker(delegate { lLimit.Text = "Limit: " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture); }));
-                    if (pbLimit.InvokeRequired) pbLimit.Invoke(new MethodInvoker(delegate { pbLimit.Value = (int)(BorrowLimit * 100); pbLimit.ForeColor = Color.FromArgb(249, 190, 86); }));
+                    if (pbLimit.InvokeRequired) pbLimit.Invoke(new MethodInvoker(delegate { if (pbLimit.Value > 100) BorrowLimit = 1; pbLimit.Value = (int)(BorrowLimit * 100); pbLimit.ForeColor = Color.FromArgb(249, 190, 86); }));
                     //Report
-                    if (bgwVenusYield.CancellationPending) { break; }
                     ReadSettings();
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
                     if (BorrowLimit * 100 > BorrowOver)
                     {
                         if (pbLimit.InvokeRequired)
@@ -331,20 +336,26 @@ namespace VenusYield
                         webclient.DownloadString(TelegramMSG + "Borrow Limit is UNDER the limit! :) " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture));
                     }
                 }
-                catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
+                catch (Exception ex) { Console.WriteLine("#1 {0}", ex.Message.ToString()); worker.CancelAsync(); }
 
                 await Task.Delay(TimeSpan.FromMinutes(RefreshMins));
             }
+            if (!worker.IsBusy) bgwVenusYield.RunWorkerAsync();
+        }
+
+        private void bgwVenusYield_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (!e.Cancelled) return;
+            else bgwVenusYield.RunWorkerAsync();
         }
 
         private void lSettings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {           
-            bgwVenusYield.CancelAsync();
+        {            
             var newFrm = new Form2();
             newFrm.Closed += delegate
             {
                 ReadSettings();
-                bgwVenusYield.RunWorkerAsync();
+                bgwVenusYield.CancelAsync();
             };
             newFrm.Show();
         }

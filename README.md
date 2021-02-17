@@ -52,3 +52,7 @@ And remember:
 CHANGES from v0.1 to v0.2
 - fixed wrong calculation on Limit% when VAI in Vault is different from VAI Minted (thanks @YongeNoodle & @sosolean for reporting)
 - fixed issue when updating settings during a balance update (thanks @mikibighead for reporting)
+
+CHANGES from v0.2 to v0.3
+- Added additional BSCendpoints to avoid a single point failure
+- Improved Thread management

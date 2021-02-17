@@ -133,6 +133,7 @@ namespace VenusYield
             // 
             this.bgwVenusYield.WorkerSupportsCancellation = true;
             this.bgwVenusYield.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwVenusYield_DoWorkAsync);
+            this.bgwVenusYield.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwVenusYield_RunWorkerCompleted);
             // 
             // pictureBox1
             // 
@@ -1069,7 +1070,7 @@ namespace VenusYield
             this.Name = "Form1";
             this.Opacity = 0.9D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "VenusYield v0.2";
+            this.Text = "VenusYield v0.3";
             this.Resize += new System.EventHandler(this.Form1_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBCH)).EndInit();
