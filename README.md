@@ -4,7 +4,7 @@
 
 The aim of this "VenusYield" APP is to warn you through a Telegram message when your Supply/Borrow/Mint ratio is outside a given percentage in order to avoid a liquidation (currently a tough 10% of your underwater collaterals).
 
-"VenusYield" is released as an open source software developed on Visual C# 16.9; Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.2"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.2.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
+"VenusYield" is released as an open source software developed on Visual C# 16.9; Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.3"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.3.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
 
 Now, let me show you how it looks like and how it works:
 
