@@ -137,8 +137,8 @@ namespace VenusYield
             // bgwVenusYield
             // 
             this.bgwVenusYield.WorkerSupportsCancellation = true;
-            this.bgwVenusYield.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwVenusYield_DoWorkAsync);
-            this.bgwVenusYield.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwVenusYield_RunWorkerCompleted);
+            this.bgwVenusYield.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BgwVenusYield_DoWorkAsync);
+            this.bgwVenusYield.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BgwVenusYield_RunWorkerCompleted);
             // 
             // pbSXP
             // 
@@ -437,7 +437,7 @@ namespace VenusYield
             this.lSettings.Text = "Settings";
             this.lSettings.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lSettings.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSettings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lSettings_LinkClicked);
+            this.lSettings.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LSettings_LinkClicked);
             // 
             // lBorrowETH
             // 
@@ -985,7 +985,7 @@ namespace VenusYield
             // 
             this.notifyVenusYield.Icon = ((System.Drawing.Icon)(resources.GetObject("notifyVenusYield.Icon")));
             this.notifyVenusYield.Text = "VenusYield";
-            this.notifyVenusYield.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyVenusYield_MouseDoubleClick);
+            this.notifyVenusYield.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.NotifyVenusYield_MouseDoubleClick);
             // 
             // lBorrowADA
             // 

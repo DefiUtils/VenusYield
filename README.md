@@ -4,7 +4,7 @@
 
 The aim of this "VenusYield" APP is to warn you through a Telegram message when your Supply/Borrow/Mint ratio is outside a given percentage in order to avoid a liquidation (currently a tough 10% of your underwater collaterals).
 
-"VenusYield" is released as an open source software developed on Visual C# 16.9; Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.4"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.4.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
+"VenusYield" is released as an open source software developed on Visual C# 16.8 (.NET Framework 4.8); Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.4"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.4.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
 
 Now, let me show you how it looks like and how it works:
 
@@ -64,3 +64,4 @@ CHANGES from v0.2 to v0.3
 CHANGES from v0.3 to v0.4
 - Added $ADA Cardano as per VIP-9
 - Added "/report" command for Telegram Bot to get Limit and Balance values
+- Delete manually C:\ProgramData\VenusYield.json data file before running V0.4
