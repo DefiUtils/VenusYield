@@ -10,17 +10,23 @@ using Nethereum.Web3;
 using System.IO;
 using System.Globalization;
 using System.Drawing;
+using Telegram.Bot;
+using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Args;
+using System.Linq;
 
 namespace VenusYield
 {
     public partial class Form1 : Form
     {
         public string BSCAddress { get; private set; }
-        public string TelegramBot { get; private set; }
+        public string TelegramBotAPI { get; private set; }
         public uint TelegramChatID { get; private set; }
         public uint BorrowUnder { get; private set; }
         public uint BorrowOver { get; private set; }
         public uint RefreshMins { get; private set; }
+        public double Balance { get; private set; }
+        public double BorrowLimit { get; private set; }        
 
         readonly string VenusAPIvToken = "https://api.venus.io/api/vtoken";
         readonly string BinanceAPIticker = "https://api.binance.com/api/v3/ticker/24hr?symbol=";
@@ -42,6 +48,7 @@ namespace VenusYield
         readonly string BSCvBETHcontract = "0x972207A639CC1B374B893cc33Fa251b55CEB7c07";
         readonly string BSCvDAIcontract = "0x334b3eCB4DCa3593BCCC3c7EBD1A1C1d1780FBF1";
         readonly string BSCvFILcontract = "0xf91d58b5aE142DAcC749f58A49FCBac340Cb0343";
+        readonly string BSCvADAcontract = "0x9A0AF7FDb2065Ce470D72664DE73cAE409dA28Ec";
         readonly string BSCVAIcontract = "0x4bd17003473389a42daf6a0a729f6fdb328bbbd7";
         readonly string BSCVAIvaultcontract = "0x0667Eed0a0aAb930af74a3dfeDD263A73994f216";
         readonly string BSCUnitrollercontract = "0xfD36E2c2a6789Db23113685031d7F16329158384";
@@ -53,11 +60,18 @@ namespace VenusYield
 
         List<string> StableCoins = new List<string> { "VAI", "USDT", "USDC", "DAI", "BUSD" };
 
+        private static TelegramBotClient botClient;
+
         public Form1()
         {
             InitializeComponent();
             ReadSettings();
             bgwVenusYield.RunWorkerAsync();
+            botClient = new TelegramBotClient(TelegramBotAPI);
+            var botMe = botClient.GetMeAsync().Result;
+            botClient.OnMessage += BotTelegramReadMsg;
+            botClient.OnReceiveError += BotTelegramError;
+            botClient.StartReceiving(Array.Empty<UpdateType>());
         }
 
         public void ReadSettings()
@@ -65,18 +79,18 @@ namespace VenusYield
             var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             try
             {
-                using (StreamReader file = File.OpenText(systemPath + @"\VenusYield.json"))
+                using (StreamReader file = System.IO.File.OpenText(systemPath + @"\VenusYield.json"))
                 {
                     JsonSerializer serializer = new JsonSerializer();
                     Settings mySettings = (Settings)serializer.Deserialize(file, typeof(Settings));
 
                     BSCAddress = mySettings.BSCaddress;
-                    TelegramBot = mySettings.TelegramBot;
+                    TelegramBotAPI = mySettings.TelegramBotAPI;
                     TelegramChatID = mySettings.TelegramChatID;
                     BorrowUnder = mySettings.BorrowUnder;
                     BorrowOver = mySettings.BorrowOver;
                     RefreshMins = mySettings.RefreshRate;
-                }                
+                }
             }
             catch (Exception ex) { Console.WriteLine("#2 {0}", ex.Message.ToString()); }
         }
@@ -130,7 +144,6 @@ namespace VenusYield
             int index = rand.Next(BSCendpoints.Length);
             string BSCendpoint = BSCendpoints[index];
             Web3 web3 = new Web3(BSCendpoint);
-            var TelegramMSG = "https://api.telegram.org/bot" + TelegramBot + "/sendMessage?chat_id=" + TelegramChatID.ToString() + "&parse_mode=HTML&text=";
 
             while (true)
             {
@@ -167,6 +180,15 @@ namespace VenusYield
                         lSupplyETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyETH.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " ETH"; else lSupplyETH.Text = "---"; }));
                     if (lBorrowETH.InvokeRequired)
                         lBorrowETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowETH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " ETH"; else lBorrowETH.Text = "---"; }));
+                    mytokenBalances = await tokenBalances("BNB", BSCvBNBcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
+                    if (lPriceBNB.InvokeRequired)
+                        lPriceBNB.Invoke(new MethodInvoker(delegate { lPriceBNB.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
+                    if (lSupplyBNB.InvokeRequired)
+                        lSupplyBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBNB.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lSupplyBNB.Text = "---"; }));
+                    if (lBorrowBNB.InvokeRequired)
+                        lBorrowBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBNB.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lBorrowBNB.Text = "---"; }));
                     mytokenBalances = await tokenBalances("DOT", BSCvDOTcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
@@ -176,6 +198,15 @@ namespace VenusYield
                         lSupplyDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDOT.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lSupplyDOT.Text = "---"; }));
                     if (lBorrowDOT.InvokeRequired)
                         lBorrowDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDOT.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lBorrowDOT.Text = "---"; }));
+                    mytokenBalances = await tokenBalances("ADA", BSCvADAcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
+                    if (lPriceADA.InvokeRequired)
+                        lPriceADA.Invoke(new MethodInvoker(delegate { lPriceADA.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
+                    if (lSupplyADA.InvokeRequired)
+                        lSupplyADA.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyADA.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " ADA"; else lSupplyADA.Text = "---"; }));
+                    if (lBorrowADA.InvokeRequired)
+                        lBorrowADA.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowADA.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " ADA"; else lBorrowADA.Text = "---"; }));
                     mytokenBalances = await tokenBalances("XRP", BSCvXRPcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
@@ -212,15 +243,6 @@ namespace VenusYield
                         lSupplyBCH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBCH.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BCH"; else lSupplyBCH.Text = "---"; }));
                     if (lBorrowBCH.InvokeRequired)
                         lBorrowBCH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBCH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BCH"; else lBorrowBCH.Text = "---"; }));
-                    mytokenBalances = await tokenBalances("BNB", BSCvBNBcontract, null);
-                    if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
-                    if (lPriceBNB.InvokeRequired)
-                        lPriceBNB.Invoke(new MethodInvoker(delegate { lPriceBNB.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
-                    if (lSupplyBNB.InvokeRequired)
-                        lSupplyBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBNB.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lSupplyBNB.Text = "---"; }));
-                    if (lBorrowBNB.InvokeRequired)
-                        lBorrowBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBNB.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lBorrowBNB.Text = "---"; }));
                     mytokenBalances = await tokenBalances("FIL", BSCvFILcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
                     TotalSupplyUSD = TotalSupplyUSD + mytokenBalances.SupplyUSD; TotalBorrowUSD = TotalBorrowUSD + mytokenBalances.BorrowUSD;
@@ -310,30 +332,33 @@ namespace VenusYield
                     if (lVAIvault.InvokeRequired)
                         lVAIvault.Invoke(new MethodInvoker(delegate { lVAIvault.Text = "VAI vault: " + "$" + VAIvault.ToString("N0", CultureInfo.InvariantCulture); }));
                     //Balance
+                    Balance = TotalSupplyUSD;
                     if (lBalance.InvokeRequired)
-                        lBalance.Invoke(new MethodInvoker(delegate { lBalance.Text = "Balance: " + "$" + TotalSupplyUSD.ToString("N0", CultureInfo.InvariantCulture); }));
+                        lBalance.Invoke(new MethodInvoker(delegate { lBalance.Text = "Balance: " + "$" + Balance.ToString("N0", CultureInfo.InvariantCulture); }));
                     //Limit
-                    var BorrowLimit = (TotalBorrowUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyUSD * 0.6);
+                    BorrowLimit = (TotalBorrowUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyUSD * 0.6);
                     if (lLimit.InvokeRequired) lLimit.Invoke(new MethodInvoker(delegate { lLimit.Text = "Limit: " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture); }));
-                    if (pbLimit.InvokeRequired) pbLimit.Invoke(new MethodInvoker(delegate { if (pbLimit.Value > 100) BorrowLimit = 1; pbLimit.Value = (int)(BorrowLimit * 100); pbLimit.ForeColor = Color.FromArgb(249, 190, 86); }));
+                    if (pbLimit.InvokeRequired) pbLimit.Invoke(new MethodInvoker(delegate { var Limit = BorrowLimit;  if(BorrowLimit > 1) Limit = 1; pbLimit.Value = (int)(Limit * 100); pbLimit.ForeColor = Color.FromArgb(249, 190, 86); }));
                     //Report
                     ReadSettings();
                     if (worker.CancellationPending) { e.Cancel = true; break; }
+                    botClient = new TelegramBotClient(TelegramBotAPI);
                     if (BorrowLimit * 100 > BorrowOver)
                     {
                         if (pbLimit.InvokeRequired)
                         {
                             pbLimit.Invoke(new MethodInvoker(delegate { pbLimit.ForeColor = Color.OrangeRed; }));
                         }
-                        webclient.DownloadString(TelegramMSG + "Borrow Limit is OVER the limit! :( " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture));
+                        await botClient.SendTextMessageAsync(TelegramChatID.ToString(), "Borrow Limit is OVER the limit! :( " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture));
+
                     }
                     else if (BorrowLimit * 100 < BorrowUnder)
                     {
                         if (pbLimit.InvokeRequired)
                         {
                             pbLimit.Invoke(new MethodInvoker(delegate { pbLimit.ForeColor = Color.GreenYellow; }));
-                        }
-                        webclient.DownloadString(TelegramMSG + "Borrow Limit is UNDER the limit! :) " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture));
+                        }                        
+                        await botClient.SendTextMessageAsync(TelegramChatID.ToString(), "Borrow Limit is UNDER the limit! :) " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture));
                     }
                 }
                 catch (Exception ex) { Console.WriteLine("#1 {0}", ex.Message.ToString()); worker.CancelAsync(); }
@@ -350,7 +375,7 @@ namespace VenusYield
         }
 
         private void lSettings_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {            
+        {
             var newFrm = new Form2();
             newFrm.Closed += delegate
             {
@@ -374,6 +399,31 @@ namespace VenusYield
             Show();
             this.WindowState = FormWindowState.Normal;
             notifyVenusYield.Visible = false;
+        }
+
+        private async void BotTelegramReadMsg(object sender, MessageEventArgs messageEventArgs)
+        {
+            var ReadMsg = messageEventArgs.Message;
+
+            if (ReadMsg == null || ReadMsg.Type != MessageType.Text)
+                return;
+
+            switch (ReadMsg.Text.Split(' ').First())
+            {
+                case "/report":
+                    await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Balance: ${Balance.ToString("N0", CultureInfo.InvariantCulture)}");
+                    await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Limit: {BorrowLimit.ToString("P2", CultureInfo.InvariantCulture)}");
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        private static void BotTelegramError(object sender, ReceiveErrorEventArgs errorEventArgs)
+        {
+            Console.WriteLine("Error: {0} — {1}",
+                errorEventArgs.ApiRequestException.ErrorCode,
+                errorEventArgs.ApiRequestException.Message);
         }
     }
 

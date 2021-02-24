@@ -33,7 +33,7 @@ namespace VenusYield
             this.tbBSCAddress = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.tblTelegramBot = new System.Windows.Forms.TextBox();
+            this.tblTelegramBotAPI = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.nBorrowOver = new System.Windows.Forms.NumericUpDown();
@@ -93,15 +93,15 @@ namespace VenusYield
             this.label5.TabIndex = 3;
             this.label5.Text = "Telegram Bot:";
             // 
-            // tblTelegramBot
+            // tblTelegramBotAPI
             // 
-            this.tblTelegramBot.Font = new System.Drawing.Font("Open Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tblTelegramBot.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.tblTelegramBot.Location = new System.Drawing.Point(171, 56);
-            this.tblTelegramBot.Name = "tblTelegramBot";
-            this.tblTelegramBot.Size = new System.Drawing.Size(430, 29);
-            this.tblTelegramBot.TabIndex = 2;
-            this.tblTelegramBot.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.tblTelegramBotAPI.Font = new System.Drawing.Font("Open Sans", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.tblTelegramBotAPI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.tblTelegramBotAPI.Location = new System.Drawing.Point(171, 56);
+            this.tblTelegramBotAPI.Name = "tblTelegramBotAPI";
+            this.tblTelegramBotAPI.Size = new System.Drawing.Size(430, 29);
+            this.tblTelegramBotAPI.TabIndex = 2;
+            this.tblTelegramBotAPI.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label2
             // 
@@ -205,7 +205,7 @@ namespace VenusYield
             this.groupBox2.Controls.Add(this.bGetID);
             this.groupBox2.Controls.Add(this.tbTelegramChatID);
             this.groupBox2.Controls.Add(this.label8);
-            this.groupBox2.Controls.Add(this.tblTelegramBot);
+            this.groupBox2.Controls.Add(this.tblTelegramBotAPI);
             this.groupBox2.Controls.Add(this.tbBSCAddress);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.label1);
@@ -406,7 +406,7 @@ namespace VenusYield
         private System.Windows.Forms.TextBox tbBSCAddress;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox tblTelegramBot;
+        private System.Windows.Forms.TextBox tblTelegramBotAPI;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label4;

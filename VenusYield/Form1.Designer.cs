@@ -32,17 +32,17 @@ namespace VenusYield
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.bgwVenusYield = new System.ComponentModel.BackgroundWorker();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.pbSXP = new System.Windows.Forms.PictureBox();
             this.label1 = new System.Windows.Forms.Label();
             this.pbBCH = new System.Windows.Forms.PictureBox();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
+            this.pbBETH = new System.Windows.Forms.PictureBox();
             this.pbBNB = new System.Windows.Forms.PictureBox();
             this.pbBTC = new System.Windows.Forms.PictureBox();
             this.pbBUSD = new System.Windows.Forms.PictureBox();
             this.pbDAI = new System.Windows.Forms.PictureBox();
             this.pbDOT = new System.Windows.Forms.PictureBox();
             this.pbETH = new System.Windows.Forms.PictureBox();
-            this.pictureBox10 = new System.Windows.Forms.PictureBox();
+            this.pbFIL = new System.Windows.Forms.PictureBox();
             this.pbLINK = new System.Windows.Forms.PictureBox();
             this.pbLTC = new System.Windows.Forms.PictureBox();
             this.pbUSDC = new System.Windows.Forms.PictureBox();
@@ -110,16 +110,20 @@ namespace VenusYield
             this.lVAIvault = new System.Windows.Forms.Label();
             this.lBalance = new System.Windows.Forms.Label();
             this.notifyVenusYield = new System.Windows.Forms.NotifyIcon(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            this.lBorrowADA = new System.Windows.Forms.Label();
+            this.lSupplyADA = new System.Windows.Forms.Label();
+            this.lPriceADA = new System.Windows.Forms.Label();
+            this.pbADA = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSXP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBCH)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBETH)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBNB)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBTC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBUSD)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDAI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDOT)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbETH)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFIL)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLINK)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLTC)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUSDC)).BeginInit();
@@ -127,6 +131,7 @@ namespace VenusYield
             ((System.ComponentModel.ISupportInitialize)(this.pbXRP)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbXVS)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbVAI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbADA)).BeginInit();
             this.SuspendLayout();
             // 
             // bgwVenusYield
@@ -135,15 +140,15 @@ namespace VenusYield
             this.bgwVenusYield.DoWork += new System.ComponentModel.DoWorkEventHandler(this.bgwVenusYield_DoWorkAsync);
             this.bgwVenusYield.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.bgwVenusYield_RunWorkerCompleted);
             // 
-            // pictureBox1
+            // pbSXP
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(20, 639);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 0;
-            this.pictureBox1.TabStop = false;
+            this.pbSXP.Image = ((System.Drawing.Image)(resources.GetObject("pbSXP.Image")));
+            this.pbSXP.Location = new System.Drawing.Point(20, 685);
+            this.pbSXP.Name = "pbSXP";
+            this.pbSXP.Size = new System.Drawing.Size(40, 40);
+            this.pbSXP.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbSXP.TabIndex = 0;
+            this.pbSXP.TabStop = false;
             // 
             // label1
             // 
@@ -159,27 +164,27 @@ namespace VenusYield
             // pbBCH
             // 
             this.pbBCH.Image = ((System.Drawing.Image)(resources.GetObject("pbBCH.Image")));
-            this.pbBCH.Location = new System.Drawing.Point(20, 501);
+            this.pbBCH.Location = new System.Drawing.Point(20, 593);
             this.pbBCH.Name = "pbBCH";
             this.pbBCH.Size = new System.Drawing.Size(40, 40);
             this.pbBCH.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pbBCH.TabIndex = 3;
             this.pbBCH.TabStop = false;
             // 
-            // pictureBox3
+            // pbBETH
             // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(20, 685);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox3.TabIndex = 4;
-            this.pictureBox3.TabStop = false;
+            this.pbBETH.Image = ((System.Drawing.Image)(resources.GetObject("pbBETH.Image")));
+            this.pbBETH.Location = new System.Drawing.Point(20, 731);
+            this.pbBETH.Name = "pbBETH";
+            this.pbBETH.Size = new System.Drawing.Size(40, 40);
+            this.pbBETH.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbBETH.TabIndex = 4;
+            this.pbBETH.TabStop = false;
             // 
             // pbBNB
             // 
             this.pbBNB.Image = ((System.Drawing.Image)(resources.GetObject("pbBNB.Image")));
-            this.pbBNB.Location = new System.Drawing.Point(20, 547);
+            this.pbBNB.Location = new System.Drawing.Point(20, 317);
             this.pbBNB.Name = "pbBNB";
             this.pbBNB.Size = new System.Drawing.Size(40, 40);
             this.pbBNB.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -199,7 +204,7 @@ namespace VenusYield
             // pbBUSD
             // 
             this.pbBUSD.Image = ((System.Drawing.Image)(resources.GetObject("pbBUSD.Image")));
-            this.pbBUSD.Location = new System.Drawing.Point(20, 869);
+            this.pbBUSD.Location = new System.Drawing.Point(20, 915);
             this.pbBUSD.Name = "pbBUSD";
             this.pbBUSD.Size = new System.Drawing.Size(40, 40);
             this.pbBUSD.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -209,7 +214,7 @@ namespace VenusYield
             // pbDAI
             // 
             this.pbDAI.Image = ((System.Drawing.Image)(resources.GetObject("pbDAI.Image")));
-            this.pbDAI.Location = new System.Drawing.Point(20, 823);
+            this.pbDAI.Location = new System.Drawing.Point(20, 869);
             this.pbDAI.Name = "pbDAI";
             this.pbDAI.Size = new System.Drawing.Size(40, 40);
             this.pbDAI.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -219,7 +224,7 @@ namespace VenusYield
             // pbDOT
             // 
             this.pbDOT.Image = ((System.Drawing.Image)(resources.GetObject("pbDOT.Image")));
-            this.pbDOT.Location = new System.Drawing.Point(20, 317);
+            this.pbDOT.Location = new System.Drawing.Point(20, 363);
             this.pbDOT.Name = "pbDOT";
             this.pbDOT.Size = new System.Drawing.Size(40, 40);
             this.pbDOT.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -236,20 +241,20 @@ namespace VenusYield
             this.pbETH.TabIndex = 10;
             this.pbETH.TabStop = false;
             // 
-            // pictureBox10
+            // pbFIL
             // 
-            this.pictureBox10.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox10.Image")));
-            this.pictureBox10.Location = new System.Drawing.Point(20, 593);
-            this.pictureBox10.Name = "pictureBox10";
-            this.pictureBox10.Size = new System.Drawing.Size(40, 40);
-            this.pictureBox10.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox10.TabIndex = 11;
-            this.pictureBox10.TabStop = false;
+            this.pbFIL.Image = ((System.Drawing.Image)(resources.GetObject("pbFIL.Image")));
+            this.pbFIL.Location = new System.Drawing.Point(20, 639);
+            this.pbFIL.Name = "pbFIL";
+            this.pbFIL.Size = new System.Drawing.Size(40, 40);
+            this.pbFIL.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbFIL.TabIndex = 11;
+            this.pbFIL.TabStop = false;
             // 
             // pbLINK
             // 
             this.pbLINK.Image = ((System.Drawing.Image)(resources.GetObject("pbLINK.Image")));
-            this.pbLINK.Location = new System.Drawing.Point(20, 455);
+            this.pbLINK.Location = new System.Drawing.Point(20, 547);
             this.pbLINK.Name = "pbLINK";
             this.pbLINK.Size = new System.Drawing.Size(40, 40);
             this.pbLINK.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -259,7 +264,7 @@ namespace VenusYield
             // pbLTC
             // 
             this.pbLTC.Image = ((System.Drawing.Image)(resources.GetObject("pbLTC.Image")));
-            this.pbLTC.Location = new System.Drawing.Point(20, 409);
+            this.pbLTC.Location = new System.Drawing.Point(20, 501);
             this.pbLTC.Name = "pbLTC";
             this.pbLTC.Size = new System.Drawing.Size(40, 40);
             this.pbLTC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -269,7 +274,7 @@ namespace VenusYield
             // pbUSDC
             // 
             this.pbUSDC.Image = ((System.Drawing.Image)(resources.GetObject("pbUSDC.Image")));
-            this.pbUSDC.Location = new System.Drawing.Point(20, 777);
+            this.pbUSDC.Location = new System.Drawing.Point(20, 823);
             this.pbUSDC.Name = "pbUSDC";
             this.pbUSDC.Size = new System.Drawing.Size(40, 40);
             this.pbUSDC.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -279,7 +284,7 @@ namespace VenusYield
             // pbUSDT
             // 
             this.pbUSDT.Image = ((System.Drawing.Image)(resources.GetObject("pbUSDT.Image")));
-            this.pbUSDT.Location = new System.Drawing.Point(20, 731);
+            this.pbUSDT.Location = new System.Drawing.Point(20, 777);
             this.pbUSDT.Name = "pbUSDT";
             this.pbUSDT.Size = new System.Drawing.Size(40, 40);
             this.pbUSDT.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -289,7 +294,7 @@ namespace VenusYield
             // pbXRP
             // 
             this.pbXRP.Image = ((System.Drawing.Image)(resources.GetObject("pbXRP.Image")));
-            this.pbXRP.Location = new System.Drawing.Point(20, 363);
+            this.pbXRP.Location = new System.Drawing.Point(20, 455);
             this.pbXRP.Name = "pbXRP";
             this.pbXRP.Size = new System.Drawing.Size(40, 40);
             this.pbXRP.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -321,7 +326,7 @@ namespace VenusYield
             // pbVAI
             // 
             this.pbVAI.Image = ((System.Drawing.Image)(resources.GetObject("pbVAI.Image")));
-            this.pbVAI.Location = new System.Drawing.Point(20, 915);
+            this.pbVAI.Location = new System.Drawing.Point(20, 961);
             this.pbVAI.Name = "pbVAI";
             this.pbVAI.Size = new System.Drawing.Size(40, 40);
             this.pbVAI.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -471,7 +476,7 @@ namespace VenusYield
             // 
             this.lBorrowDOT.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowDOT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowDOT.Location = new System.Drawing.Point(277, 317);
+            this.lBorrowDOT.Location = new System.Drawing.Point(277, 363);
             this.lBorrowDOT.Name = "lBorrowDOT";
             this.lBorrowDOT.Size = new System.Drawing.Size(120, 40);
             this.lBorrowDOT.TabIndex = 34;
@@ -482,7 +487,7 @@ namespace VenusYield
             // 
             this.lSupplyDOT.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyDOT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyDOT.Location = new System.Drawing.Point(151, 317);
+            this.lSupplyDOT.Location = new System.Drawing.Point(151, 363);
             this.lSupplyDOT.Name = "lSupplyDOT";
             this.lSupplyDOT.Size = new System.Drawing.Size(120, 40);
             this.lSupplyDOT.TabIndex = 33;
@@ -493,7 +498,7 @@ namespace VenusYield
             // 
             this.lPriceDOT.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceDOT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceDOT.Location = new System.Drawing.Point(65, 317);
+            this.lPriceDOT.Location = new System.Drawing.Point(65, 363);
             this.lPriceDOT.Name = "lPriceDOT";
             this.lPriceDOT.Size = new System.Drawing.Size(80, 40);
             this.lPriceDOT.TabIndex = 32;
@@ -504,7 +509,7 @@ namespace VenusYield
             // 
             this.lBorrowXRP.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowXRP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowXRP.Location = new System.Drawing.Point(277, 363);
+            this.lBorrowXRP.Location = new System.Drawing.Point(277, 455);
             this.lBorrowXRP.Name = "lBorrowXRP";
             this.lBorrowXRP.Size = new System.Drawing.Size(120, 40);
             this.lBorrowXRP.TabIndex = 37;
@@ -515,7 +520,7 @@ namespace VenusYield
             // 
             this.lSupplyXRP.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyXRP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyXRP.Location = new System.Drawing.Point(151, 363);
+            this.lSupplyXRP.Location = new System.Drawing.Point(151, 455);
             this.lSupplyXRP.Name = "lSupplyXRP";
             this.lSupplyXRP.Size = new System.Drawing.Size(120, 40);
             this.lSupplyXRP.TabIndex = 36;
@@ -526,7 +531,7 @@ namespace VenusYield
             // 
             this.lPriceXRP.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceXRP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceXRP.Location = new System.Drawing.Point(65, 363);
+            this.lPriceXRP.Location = new System.Drawing.Point(65, 455);
             this.lPriceXRP.Name = "lPriceXRP";
             this.lPriceXRP.Size = new System.Drawing.Size(80, 40);
             this.lPriceXRP.TabIndex = 35;
@@ -537,7 +542,7 @@ namespace VenusYield
             // 
             this.lBorrowLTC.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowLTC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowLTC.Location = new System.Drawing.Point(277, 409);
+            this.lBorrowLTC.Location = new System.Drawing.Point(277, 501);
             this.lBorrowLTC.Name = "lBorrowLTC";
             this.lBorrowLTC.Size = new System.Drawing.Size(120, 40);
             this.lBorrowLTC.TabIndex = 40;
@@ -548,7 +553,7 @@ namespace VenusYield
             // 
             this.lSupplyLTC.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyLTC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyLTC.Location = new System.Drawing.Point(151, 409);
+            this.lSupplyLTC.Location = new System.Drawing.Point(151, 501);
             this.lSupplyLTC.Name = "lSupplyLTC";
             this.lSupplyLTC.Size = new System.Drawing.Size(120, 40);
             this.lSupplyLTC.TabIndex = 39;
@@ -559,7 +564,7 @@ namespace VenusYield
             // 
             this.lPriceLTC.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceLTC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceLTC.Location = new System.Drawing.Point(65, 409);
+            this.lPriceLTC.Location = new System.Drawing.Point(65, 501);
             this.lPriceLTC.Name = "lPriceLTC";
             this.lPriceLTC.Size = new System.Drawing.Size(80, 40);
             this.lPriceLTC.TabIndex = 38;
@@ -570,7 +575,7 @@ namespace VenusYield
             // 
             this.lBorrowLINK.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowLINK.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowLINK.Location = new System.Drawing.Point(277, 455);
+            this.lBorrowLINK.Location = new System.Drawing.Point(277, 547);
             this.lBorrowLINK.Name = "lBorrowLINK";
             this.lBorrowLINK.Size = new System.Drawing.Size(120, 40);
             this.lBorrowLINK.TabIndex = 43;
@@ -581,7 +586,7 @@ namespace VenusYield
             // 
             this.lSupplyLINK.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyLINK.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyLINK.Location = new System.Drawing.Point(151, 455);
+            this.lSupplyLINK.Location = new System.Drawing.Point(151, 547);
             this.lSupplyLINK.Name = "lSupplyLINK";
             this.lSupplyLINK.Size = new System.Drawing.Size(120, 40);
             this.lSupplyLINK.TabIndex = 42;
@@ -592,7 +597,7 @@ namespace VenusYield
             // 
             this.lPriceLINK.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceLINK.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceLINK.Location = new System.Drawing.Point(65, 455);
+            this.lPriceLINK.Location = new System.Drawing.Point(65, 547);
             this.lPriceLINK.Name = "lPriceLINK";
             this.lPriceLINK.Size = new System.Drawing.Size(80, 40);
             this.lPriceLINK.TabIndex = 41;
@@ -603,7 +608,7 @@ namespace VenusYield
             // 
             this.lBorrowBCH.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowBCH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowBCH.Location = new System.Drawing.Point(277, 501);
+            this.lBorrowBCH.Location = new System.Drawing.Point(277, 593);
             this.lBorrowBCH.Name = "lBorrowBCH";
             this.lBorrowBCH.Size = new System.Drawing.Size(120, 40);
             this.lBorrowBCH.TabIndex = 46;
@@ -614,7 +619,7 @@ namespace VenusYield
             // 
             this.lSupplyBCH.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyBCH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyBCH.Location = new System.Drawing.Point(151, 501);
+            this.lSupplyBCH.Location = new System.Drawing.Point(151, 593);
             this.lSupplyBCH.Name = "lSupplyBCH";
             this.lSupplyBCH.Size = new System.Drawing.Size(120, 40);
             this.lSupplyBCH.TabIndex = 45;
@@ -625,7 +630,7 @@ namespace VenusYield
             // 
             this.lPriceBCH.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceBCH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceBCH.Location = new System.Drawing.Point(65, 501);
+            this.lPriceBCH.Location = new System.Drawing.Point(65, 593);
             this.lPriceBCH.Name = "lPriceBCH";
             this.lPriceBCH.Size = new System.Drawing.Size(80, 40);
             this.lPriceBCH.TabIndex = 44;
@@ -636,7 +641,7 @@ namespace VenusYield
             // 
             this.lBorrowBNB.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowBNB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowBNB.Location = new System.Drawing.Point(277, 547);
+            this.lBorrowBNB.Location = new System.Drawing.Point(277, 317);
             this.lBorrowBNB.Name = "lBorrowBNB";
             this.lBorrowBNB.Size = new System.Drawing.Size(120, 40);
             this.lBorrowBNB.TabIndex = 49;
@@ -647,7 +652,7 @@ namespace VenusYield
             // 
             this.lSupplyBNB.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyBNB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyBNB.Location = new System.Drawing.Point(151, 547);
+            this.lSupplyBNB.Location = new System.Drawing.Point(151, 317);
             this.lSupplyBNB.Name = "lSupplyBNB";
             this.lSupplyBNB.Size = new System.Drawing.Size(120, 40);
             this.lSupplyBNB.TabIndex = 48;
@@ -658,7 +663,7 @@ namespace VenusYield
             // 
             this.lPriceBNB.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceBNB.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceBNB.Location = new System.Drawing.Point(65, 547);
+            this.lPriceBNB.Location = new System.Drawing.Point(65, 317);
             this.lPriceBNB.Name = "lPriceBNB";
             this.lPriceBNB.Size = new System.Drawing.Size(80, 40);
             this.lPriceBNB.TabIndex = 47;
@@ -669,7 +674,7 @@ namespace VenusYield
             // 
             this.lBorrowFIL.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowFIL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowFIL.Location = new System.Drawing.Point(277, 593);
+            this.lBorrowFIL.Location = new System.Drawing.Point(277, 639);
             this.lBorrowFIL.Name = "lBorrowFIL";
             this.lBorrowFIL.Size = new System.Drawing.Size(120, 40);
             this.lBorrowFIL.TabIndex = 52;
@@ -680,7 +685,7 @@ namespace VenusYield
             // 
             this.lSupplyFIL.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyFIL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyFIL.Location = new System.Drawing.Point(151, 593);
+            this.lSupplyFIL.Location = new System.Drawing.Point(151, 639);
             this.lSupplyFIL.Name = "lSupplyFIL";
             this.lSupplyFIL.Size = new System.Drawing.Size(120, 40);
             this.lSupplyFIL.TabIndex = 51;
@@ -691,7 +696,7 @@ namespace VenusYield
             // 
             this.lPriceFIL.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceFIL.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceFIL.Location = new System.Drawing.Point(65, 593);
+            this.lPriceFIL.Location = new System.Drawing.Point(65, 639);
             this.lPriceFIL.Name = "lPriceFIL";
             this.lPriceFIL.Size = new System.Drawing.Size(80, 40);
             this.lPriceFIL.TabIndex = 50;
@@ -702,7 +707,7 @@ namespace VenusYield
             // 
             this.lBorrowSXP.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowSXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowSXP.Location = new System.Drawing.Point(277, 639);
+            this.lBorrowSXP.Location = new System.Drawing.Point(277, 685);
             this.lBorrowSXP.Name = "lBorrowSXP";
             this.lBorrowSXP.Size = new System.Drawing.Size(120, 40);
             this.lBorrowSXP.TabIndex = 55;
@@ -713,7 +718,7 @@ namespace VenusYield
             // 
             this.lSupplySXP.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplySXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplySXP.Location = new System.Drawing.Point(151, 639);
+            this.lSupplySXP.Location = new System.Drawing.Point(151, 685);
             this.lSupplySXP.Name = "lSupplySXP";
             this.lSupplySXP.Size = new System.Drawing.Size(120, 40);
             this.lSupplySXP.TabIndex = 54;
@@ -724,7 +729,7 @@ namespace VenusYield
             // 
             this.lPriceSXP.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceSXP.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceSXP.Location = new System.Drawing.Point(65, 639);
+            this.lPriceSXP.Location = new System.Drawing.Point(65, 685);
             this.lPriceSXP.Name = "lPriceSXP";
             this.lPriceSXP.Size = new System.Drawing.Size(80, 40);
             this.lPriceSXP.TabIndex = 53;
@@ -735,7 +740,7 @@ namespace VenusYield
             // 
             this.lBorrowBETH.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowBETH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowBETH.Location = new System.Drawing.Point(277, 685);
+            this.lBorrowBETH.Location = new System.Drawing.Point(277, 731);
             this.lBorrowBETH.Name = "lBorrowBETH";
             this.lBorrowBETH.Size = new System.Drawing.Size(120, 40);
             this.lBorrowBETH.TabIndex = 58;
@@ -746,7 +751,7 @@ namespace VenusYield
             // 
             this.lSupplyBETH.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyBETH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyBETH.Location = new System.Drawing.Point(151, 685);
+            this.lSupplyBETH.Location = new System.Drawing.Point(151, 731);
             this.lSupplyBETH.Name = "lSupplyBETH";
             this.lSupplyBETH.Size = new System.Drawing.Size(120, 40);
             this.lSupplyBETH.TabIndex = 57;
@@ -757,7 +762,7 @@ namespace VenusYield
             // 
             this.lPriceBETH.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceBETH.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceBETH.Location = new System.Drawing.Point(65, 685);
+            this.lPriceBETH.Location = new System.Drawing.Point(65, 731);
             this.lPriceBETH.Name = "lPriceBETH";
             this.lPriceBETH.Size = new System.Drawing.Size(80, 40);
             this.lPriceBETH.TabIndex = 56;
@@ -768,7 +773,7 @@ namespace VenusYield
             // 
             this.lBorrowUSDT.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowUSDT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowUSDT.Location = new System.Drawing.Point(277, 731);
+            this.lBorrowUSDT.Location = new System.Drawing.Point(277, 777);
             this.lBorrowUSDT.Name = "lBorrowUSDT";
             this.lBorrowUSDT.Size = new System.Drawing.Size(120, 40);
             this.lBorrowUSDT.TabIndex = 61;
@@ -779,7 +784,7 @@ namespace VenusYield
             // 
             this.lSupplyUSDT.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyUSDT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyUSDT.Location = new System.Drawing.Point(151, 731);
+            this.lSupplyUSDT.Location = new System.Drawing.Point(151, 777);
             this.lSupplyUSDT.Name = "lSupplyUSDT";
             this.lSupplyUSDT.Size = new System.Drawing.Size(120, 40);
             this.lSupplyUSDT.TabIndex = 60;
@@ -790,7 +795,7 @@ namespace VenusYield
             // 
             this.lPriceUSDT.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceUSDT.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceUSDT.Location = new System.Drawing.Point(65, 731);
+            this.lPriceUSDT.Location = new System.Drawing.Point(65, 777);
             this.lPriceUSDT.Name = "lPriceUSDT";
             this.lPriceUSDT.Size = new System.Drawing.Size(80, 40);
             this.lPriceUSDT.TabIndex = 59;
@@ -801,7 +806,7 @@ namespace VenusYield
             // 
             this.lBorrowUSDC.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowUSDC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowUSDC.Location = new System.Drawing.Point(277, 777);
+            this.lBorrowUSDC.Location = new System.Drawing.Point(277, 823);
             this.lBorrowUSDC.Name = "lBorrowUSDC";
             this.lBorrowUSDC.Size = new System.Drawing.Size(120, 40);
             this.lBorrowUSDC.TabIndex = 64;
@@ -812,7 +817,7 @@ namespace VenusYield
             // 
             this.lSupplyUSDC.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyUSDC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyUSDC.Location = new System.Drawing.Point(151, 777);
+            this.lSupplyUSDC.Location = new System.Drawing.Point(151, 823);
             this.lSupplyUSDC.Name = "lSupplyUSDC";
             this.lSupplyUSDC.Size = new System.Drawing.Size(120, 40);
             this.lSupplyUSDC.TabIndex = 63;
@@ -823,7 +828,7 @@ namespace VenusYield
             // 
             this.lPriceUSDC.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceUSDC.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceUSDC.Location = new System.Drawing.Point(65, 777);
+            this.lPriceUSDC.Location = new System.Drawing.Point(65, 823);
             this.lPriceUSDC.Name = "lPriceUSDC";
             this.lPriceUSDC.Size = new System.Drawing.Size(80, 40);
             this.lPriceUSDC.TabIndex = 62;
@@ -834,7 +839,7 @@ namespace VenusYield
             // 
             this.lBorrowDAI.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowDAI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowDAI.Location = new System.Drawing.Point(277, 823);
+            this.lBorrowDAI.Location = new System.Drawing.Point(277, 869);
             this.lBorrowDAI.Name = "lBorrowDAI";
             this.lBorrowDAI.Size = new System.Drawing.Size(120, 40);
             this.lBorrowDAI.TabIndex = 67;
@@ -845,7 +850,7 @@ namespace VenusYield
             // 
             this.lSupplyDAI.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyDAI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyDAI.Location = new System.Drawing.Point(151, 823);
+            this.lSupplyDAI.Location = new System.Drawing.Point(151, 869);
             this.lSupplyDAI.Name = "lSupplyDAI";
             this.lSupplyDAI.Size = new System.Drawing.Size(120, 40);
             this.lSupplyDAI.TabIndex = 66;
@@ -856,7 +861,7 @@ namespace VenusYield
             // 
             this.lPriceDAI.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceDAI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceDAI.Location = new System.Drawing.Point(65, 823);
+            this.lPriceDAI.Location = new System.Drawing.Point(65, 869);
             this.lPriceDAI.Name = "lPriceDAI";
             this.lPriceDAI.Size = new System.Drawing.Size(80, 40);
             this.lPriceDAI.TabIndex = 65;
@@ -867,7 +872,7 @@ namespace VenusYield
             // 
             this.lBorrowBUSD.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowBUSD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowBUSD.Location = new System.Drawing.Point(277, 869);
+            this.lBorrowBUSD.Location = new System.Drawing.Point(277, 915);
             this.lBorrowBUSD.Name = "lBorrowBUSD";
             this.lBorrowBUSD.Size = new System.Drawing.Size(120, 40);
             this.lBorrowBUSD.TabIndex = 70;
@@ -878,7 +883,7 @@ namespace VenusYield
             // 
             this.lSupplyBUSD.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyBUSD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyBUSD.Location = new System.Drawing.Point(151, 869);
+            this.lSupplyBUSD.Location = new System.Drawing.Point(151, 915);
             this.lSupplyBUSD.Name = "lSupplyBUSD";
             this.lSupplyBUSD.Size = new System.Drawing.Size(120, 40);
             this.lSupplyBUSD.TabIndex = 69;
@@ -889,7 +894,7 @@ namespace VenusYield
             // 
             this.lPriceBUSD.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceBUSD.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceBUSD.Location = new System.Drawing.Point(65, 869);
+            this.lPriceBUSD.Location = new System.Drawing.Point(65, 915);
             this.lPriceBUSD.Name = "lPriceBUSD";
             this.lPriceBUSD.Size = new System.Drawing.Size(80, 40);
             this.lPriceBUSD.TabIndex = 68;
@@ -900,7 +905,7 @@ namespace VenusYield
             // 
             this.lBorrowVAI.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lBorrowVAI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lBorrowVAI.Location = new System.Drawing.Point(277, 915);
+            this.lBorrowVAI.Location = new System.Drawing.Point(277, 961);
             this.lBorrowVAI.Name = "lBorrowVAI";
             this.lBorrowVAI.Size = new System.Drawing.Size(120, 40);
             this.lBorrowVAI.TabIndex = 73;
@@ -911,7 +916,7 @@ namespace VenusYield
             // 
             this.lSupplyVAI.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lSupplyVAI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lSupplyVAI.Location = new System.Drawing.Point(151, 915);
+            this.lSupplyVAI.Location = new System.Drawing.Point(151, 961);
             this.lSupplyVAI.Name = "lSupplyVAI";
             this.lSupplyVAI.Size = new System.Drawing.Size(120, 40);
             this.lSupplyVAI.TabIndex = 72;
@@ -922,7 +927,7 @@ namespace VenusYield
             // 
             this.lPriceVAI.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lPriceVAI.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lPriceVAI.Location = new System.Drawing.Point(65, 915);
+            this.lPriceVAI.Location = new System.Drawing.Point(65, 961);
             this.lPriceVAI.Name = "lPriceVAI";
             this.lPriceVAI.Size = new System.Drawing.Size(80, 40);
             this.lPriceVAI.TabIndex = 71;
@@ -957,7 +962,7 @@ namespace VenusYield
             this.lVAIvault.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lVAIvault.Font = new System.Drawing.Font("Open Sans", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lVAIvault.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lVAIvault.Location = new System.Drawing.Point(147, 85);
+            this.lVAIvault.Location = new System.Drawing.Point(149, 85);
             this.lVAIvault.Name = "lVAIvault";
             this.lVAIvault.Size = new System.Drawing.Size(249, 22);
             this.lVAIvault.TabIndex = 76;
@@ -982,11 +987,58 @@ namespace VenusYield
             this.notifyVenusYield.Text = "VenusYield";
             this.notifyVenusYield.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.notifyVenusYield_MouseDoubleClick);
             // 
+            // lBorrowADA
+            // 
+            this.lBorrowADA.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lBorrowADA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.lBorrowADA.Location = new System.Drawing.Point(277, 409);
+            this.lBorrowADA.Name = "lBorrowADA";
+            this.lBorrowADA.Size = new System.Drawing.Size(120, 40);
+            this.lBorrowADA.TabIndex = 81;
+            this.lBorrowADA.Text = "---";
+            this.lBorrowADA.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lSupplyADA
+            // 
+            this.lSupplyADA.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lSupplyADA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.lSupplyADA.Location = new System.Drawing.Point(151, 409);
+            this.lSupplyADA.Name = "lSupplyADA";
+            this.lSupplyADA.Size = new System.Drawing.Size(120, 40);
+            this.lSupplyADA.TabIndex = 80;
+            this.lSupplyADA.Text = "---";
+            this.lSupplyADA.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lPriceADA
+            // 
+            this.lPriceADA.Font = new System.Drawing.Font("Open Sans Semibold", 6F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lPriceADA.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.lPriceADA.Location = new System.Drawing.Point(65, 409);
+            this.lPriceADA.Name = "lPriceADA";
+            this.lPriceADA.Size = new System.Drawing.Size(80, 40);
+            this.lPriceADA.TabIndex = 79;
+            this.lPriceADA.Text = "---";
+            this.lPriceADA.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // pbADA
+            // 
+            this.pbADA.Image = ((System.Drawing.Image)(resources.GetObject("pbADA.Image")));
+            this.pbADA.Location = new System.Drawing.Point(20, 409);
+            this.pbADA.Name = "pbADA";
+            this.pbADA.Size = new System.Drawing.Size(40, 40);
+            this.pbADA.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pbADA.TabIndex = 78;
+            this.pbADA.TabStop = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(414, 966);
+            this.ClientSize = new System.Drawing.Size(416, 1010);
+            this.Controls.Add(this.lBorrowADA);
+            this.Controls.Add(this.lSupplyADA);
+            this.Controls.Add(this.lPriceADA);
+            this.Controls.Add(this.pbADA);
             this.Controls.Add(this.lBalance);
             this.Controls.Add(this.lVAIvault);
             this.Controls.Add(this.lLimit);
@@ -1052,16 +1104,16 @@ namespace VenusYield
             this.Controls.Add(this.pbUSDC);
             this.Controls.Add(this.pbLTC);
             this.Controls.Add(this.pbLINK);
-            this.Controls.Add(this.pictureBox10);
+            this.Controls.Add(this.pbFIL);
             this.Controls.Add(this.pbETH);
             this.Controls.Add(this.pbDOT);
             this.Controls.Add(this.pbDAI);
             this.Controls.Add(this.pbBUSD);
             this.Controls.Add(this.pbBTC);
             this.Controls.Add(this.pbBNB);
-            this.Controls.Add(this.pictureBox3);
+            this.Controls.Add(this.pbBETH);
             this.Controls.Add(this.pbBCH);
-            this.Controls.Add(this.pictureBox1);
+            this.Controls.Add(this.pbSXP);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -1070,18 +1122,18 @@ namespace VenusYield
             this.Name = "Form1";
             this.Opacity = 0.9D;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "VenusYield v0.3";
+            this.Text = "VenusYield v0.4";
             this.Resize += new System.EventHandler(this.Form1_Resize);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbSXP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBCH)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbBETH)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBNB)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBTC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbBUSD)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDAI)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbDOT)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbETH)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox10)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbFIL)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLINK)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbLTC)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbUSDC)).EndInit();
@@ -1089,6 +1141,7 @@ namespace VenusYield
             ((System.ComponentModel.ISupportInitialize)(this.pbXRP)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbXVS)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pbVAI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pbADA)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1097,17 +1150,17 @@ namespace VenusYield
         #endregion
 
         private System.ComponentModel.BackgroundWorker bgwVenusYield;
-        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.PictureBox pbSXP;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pbBCH;
-        private System.Windows.Forms.PictureBox pictureBox3;
+        private System.Windows.Forms.PictureBox pbBETH;
         private System.Windows.Forms.PictureBox pbBNB;
         private System.Windows.Forms.PictureBox pbBTC;
         private System.Windows.Forms.PictureBox pbBUSD;
         private System.Windows.Forms.PictureBox pbDAI;
         private System.Windows.Forms.PictureBox pbDOT;
         private System.Windows.Forms.PictureBox pbETH;
-        private System.Windows.Forms.PictureBox pictureBox10;
+        private System.Windows.Forms.PictureBox pbFIL;
         private System.Windows.Forms.PictureBox pbLINK;
         private System.Windows.Forms.PictureBox pbLTC;
         private System.Windows.Forms.PictureBox pbUSDC;
@@ -1175,6 +1228,10 @@ namespace VenusYield
         private System.Windows.Forms.Label lVAIvault;
         private System.Windows.Forms.Label lBalance;
         private System.Windows.Forms.NotifyIcon notifyVenusYield;
+        private System.Windows.Forms.Label lBorrowADA;
+        private System.Windows.Forms.Label lSupplyADA;
+        private System.Windows.Forms.Label lPriceADA;
+        private System.Windows.Forms.PictureBox pbADA;
     }
 }
 

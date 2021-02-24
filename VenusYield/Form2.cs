@@ -23,7 +23,7 @@ namespace VenusYield
                     Settings mySettings = (Settings)serializer.Deserialize(file, typeof(Settings));
 
                     tbBSCAddress.Text = mySettings.BSCaddress;
-                    tblTelegramBot.Text = mySettings.TelegramBot;
+                    tblTelegramBotAPI.Text = mySettings.TelegramBotAPI;
                     tbTelegramChatID.Text = mySettings.TelegramChatID.ToString();
                     nBorrowUnder.Text = mySettings.BorrowUnder.ToString();
                     nBorrowOver.Text = mySettings.BorrowOver.ToString();
@@ -50,9 +50,9 @@ namespace VenusYield
 
         private void bGetID_Click(object sender, EventArgs e)
         {
-            if (tblTelegramBot.Text != "")
+            if (tblTelegramBotAPI.Text != "")
             {
-                string telegramGetUpdates = "https://api.telegram.org/bot" + tblTelegramBot.Text + "/getUpdates";
+                string telegramGetUpdates = "https://api.telegram.org/bot" + tblTelegramBotAPI.Text + "/getUpdates";
                 Telegram telegramMsg = new Telegram();
                 WebClient webclient = new WebClient();
 
@@ -71,7 +71,7 @@ namespace VenusYield
             Settings mySettings = new Settings
             {
                 BSCaddress = tbBSCAddress.Text,
-                TelegramBot = tblTelegramBot.Text,
+                TelegramBotAPI = tblTelegramBotAPI.Text,
                 TelegramChatID = UInt32.TryParse(tbTelegramChatID.Text, out var f) ? f : default,
                 BorrowUnder = UInt32.TryParse(nBorrowUnder.Text, out f) ? f : default,
                 BorrowOver = UInt32.TryParse(nBorrowOver.Text, out f) ? f : default,
@@ -94,7 +94,7 @@ namespace VenusYield
     public class Settings
     {
         public string BSCaddress { get; set; }
-        public string TelegramBot { get; set; }
+        public string TelegramBotAPI { get; set; }
         public UInt32 TelegramChatID { get; set; }
         public UInt32 BorrowUnder { get; set; }
         public UInt32 BorrowOver { get; set; }
