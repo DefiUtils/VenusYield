@@ -223,7 +223,7 @@ namespace VenusYield
             this.bGetID.TabIndex = 6;
             this.bGetID.Text = "Get ID";
             this.bGetID.UseVisualStyleBackColor = true;
-            this.bGetID.Click += new System.EventHandler(this.bGetID_Click);
+            this.bGetID.Click += new System.EventHandler(this.BGetID_Click);
             // 
             // tbTelegramChatID
             // 
@@ -331,7 +331,7 @@ namespace VenusYield
             this.lGithub.Text = "GitHub";
             this.lGithub.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lGithub.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lGithub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lGithub_LinkClicked);
+            this.lGithub.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LGithub_LinkClicked);
             // 
             // lVenusCommunity
             // 
@@ -347,7 +347,7 @@ namespace VenusYield
             this.lVenusCommunity.Text = "Vennus Community";
             this.lVenusCommunity.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lVenusCommunity.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lVenusCommunity.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lVenusCommunity_LinkClicked);
+            this.lVenusCommunity.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LVenusCommunity_LinkClicked);
             // 
             // lJ1MtonicTwitter
             // 
@@ -363,7 +363,7 @@ namespace VenusYield
             this.lJ1MtonicTwitter.Text = "by @J1Mtonic";
             this.lJ1MtonicTwitter.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.lJ1MtonicTwitter.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(73)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.lJ1MtonicTwitter.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lJ1MtonicTwitter_LinkClicked);
+            this.lJ1MtonicTwitter.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.LJ1MtonicTwitter_LinkClicked);
             // 
             // Form2
             // 

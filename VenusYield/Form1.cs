@@ -31,6 +31,9 @@ namespace VenusYield
         readonly string VenusAPIvToken = "https://api.venus.io/api/vtoken";
         readonly string BinanceAPIticker = "https://api.binance.com/api/v3/ticker/24hr?symbol=";
         readonly string[] BSCendpoints = { "https://bsc-dataseed.binance.org", "https://bsc-dataseed1.binance.org", "https://bsc-dataseed2.binance.org", "https://bsc-dataseed3.binance.org", "https://bsc-dataseed4.binance.org" };
+        readonly string urlCoinGeckoGlobal = "https://api.coingecko.com/api/v3/global";
+        readonly string urlCoinGeckoDefi = "https://api.coingecko.com/api/v3/global/decentralized_finance_defi";
+        readonly string urlFandG = "https://api.alternative.me/fng/";
 
         readonly string BSCvXVScontract = "0x151b1e2635a717bcdc836ecd6fbb62b674fe3e1d";
         readonly string BSCvSXPcontract = "0x2fF3d0F6990a40261c66E1ff2017aCBc282EB6d0";
@@ -49,6 +52,7 @@ namespace VenusYield
         readonly string BSCvDAIcontract = "0x334b3eCB4DCa3593BCCC3c7EBD1A1C1d1780FBF1";
         readonly string BSCvFILcontract = "0xf91d58b5aE142DAcC749f58A49FCBac340Cb0343";
         readonly string BSCvADAcontract = "0x9A0AF7FDb2065Ce470D72664DE73cAE409dA28Ec";
+        readonly string BSCvDOGEcontract = "0xec3422ef92b2fb59e84c8b02ba73f1fe84ed8d71";
         readonly string BSCVAIcontract = "0x4bd17003473389a42daf6a0a729f6fdb328bbbd7";
         readonly string BSCVAIvaultcontract = "0x0667Eed0a0aAb930af74a3dfeDD263A73994f216";
         readonly string BSCUnitrollercontract = "0xfD36E2c2a6789Db23113685031d7F16329158384";
@@ -60,19 +64,29 @@ namespace VenusYield
         readonly List<string> StableCoins = new List<string> { "VAI", "USDT", "USDC", "DAI", "BUSD" };
 
         private static TelegramBotClient botClient;
+        private bool wFullSize = true; 
 
         public Form1()
         {
             InitializeComponent();
-            ReadSettings();
-            bgwVenusYield.RunWorkerAsync();
-            botClient = new TelegramBotClient(TelegramBotAPI);
-            botClient.OnMessage += BotTelegramReadMsg;
-            botClient.OnReceiveError += BotTelegramError;
-            botClient.StartReceiving(Array.Empty<UpdateType>());
+            bool settingsLoaded = ReadSettings();
+            if (settingsLoaded)
+            {
+                RunActivities();
+            }
+            else
+            {
+                var newFrm = new Form2();
+                newFrm.Closed += delegate
+                {
+                    ReadSettings();
+                    RunActivities();
+                };
+                newFrm.Show(this);
+            }
         }
 
-        public void ReadSettings()
+        public bool ReadSettings()
         {
             var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             try
@@ -89,8 +103,35 @@ namespace VenusYield
                     BorrowOver = mySettings.BorrowOver;
                     RefreshMins = mySettings.RefreshRate;
                 }
+                return true;
             }
-            catch (Exception ex) { Console.WriteLine("#2 {0}", ex.Message.ToString()); }
+            catch (Exception ex) { Console.WriteLine("#2 {0}", ex.Message.ToString()); return false; }
+        }
+
+        public void RunActivities()
+        {
+            bgwVenusYield.RunWorkerAsync();
+            if (TelegramBotAPI != "")
+            {
+                botClient = new TelegramBotClient(TelegramBotAPI);
+                botClient.OnMessage += BotTelegramReadMsg;
+                botClient.OnReceiveError += BotTelegramError;
+                botClient.StartReceiving(Array.Empty<UpdateType>());
+            }
+        }
+
+        private void LVenusYield_Click(object sender, EventArgs e)
+        {
+            if (wFullSize)
+            {
+                this.Size = new Size(435, 205);
+                wFullSize = false;
+            }
+            else
+            {
+                this.Size = new Size(435, 1110);
+                wFullSize = true;
+            }
         }
 
         public async Task<VTokenBalances> TokenBalances(string Symbol, string BSCcontract, VenusAPIvTokenService vTokenService)
@@ -149,11 +190,12 @@ namespace VenusYield
                 {
                     double TotalSupplyUSD = 0.0;
                     double TotalBorrowUSD = 0.0;
+                    double TotalLimitUSD = 0.0;
                     if (worker.CancellationPending) { e.Cancel = true; break; }
                     vTokenService = VenusAPIvTokenService.FromJson(webclient.DownloadString(VenusAPIvToken));
                     mytokenBalances = await TokenBalances("XVS", BSCvXVScontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceXVS.InvokeRequired)
                         lPriceXVS.Invoke(new MethodInvoker(delegate { lPriceXVS.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
                     if (lSupplyXVS.InvokeRequired)
@@ -162,7 +204,7 @@ namespace VenusYield
                         lBorrowXVS.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowXVS.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " XVS"; else lBorrowXVS.Text = "---"; }));
                     mytokenBalances = await TokenBalances("BTC", BSCvBTCcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceBTC.InvokeRequired)
                         lPriceBTC.Invoke(new MethodInvoker(delegate { lPriceBTC.Text = "$" + mytokenBalances.PriceUSD.ToString("N0", CultureInfo.InvariantCulture); }));
                     if (lSupplyBTC.InvokeRequired)
@@ -171,7 +213,7 @@ namespace VenusYield
                         lBorrowBTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBTC.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BTC"; else lBorrowBTC.Text = "---"; }));
                     mytokenBalances = await TokenBalances("ETH", BSCvETHcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceETH.InvokeRequired)
                         lPriceETH.Invoke(new MethodInvoker(delegate { lPriceETH.Text = "$" + mytokenBalances.PriceUSD.ToString("N0", CultureInfo.InvariantCulture); }));
                     if (lSupplyETH.InvokeRequired)
@@ -180,70 +222,79 @@ namespace VenusYield
                         lBorrowETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowETH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " ETH"; else lBorrowETH.Text = "---"; }));
                     mytokenBalances = await TokenBalances("BNB", BSCvBNBcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceBNB.InvokeRequired)
                         lPriceBNB.Invoke(new MethodInvoker(delegate { lPriceBNB.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
                     if (lSupplyBNB.InvokeRequired)
                         lSupplyBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBNB.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lSupplyBNB.Text = "---"; }));
                     if (lBorrowBNB.InvokeRequired)
                         lBorrowBNB.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBNB.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BNB"; else lBorrowBNB.Text = "---"; }));
-                    mytokenBalances = await TokenBalances("DOT", BSCvDOTcontract, null);
-                    if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
-                    if (lPriceDOT.InvokeRequired)
-                        lPriceDOT.Invoke(new MethodInvoker(delegate { lPriceDOT.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
-                    if (lSupplyDOT.InvokeRequired)
-                        lSupplyDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDOT.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lSupplyDOT.Text = "---"; }));
-                    if (lBorrowDOT.InvokeRequired)
-                        lBorrowDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDOT.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lBorrowDOT.Text = "---"; }));
-                    mytokenBalances = await TokenBalances("ADA", BSCvADAcontract, null);
-                    if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
-                    if (lPriceADA.InvokeRequired)
-                        lPriceADA.Invoke(new MethodInvoker(delegate { lPriceADA.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
-                    if (lSupplyADA.InvokeRequired)
-                        lSupplyADA.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyADA.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " ADA"; else lSupplyADA.Text = "---"; }));
-                    if (lBorrowADA.InvokeRequired)
-                        lBorrowADA.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowADA.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " ADA"; else lBorrowADA.Text = "---"; }));
                     mytokenBalances = await TokenBalances("XRP", BSCvXRPcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceXRP.InvokeRequired)
                         lPriceXRP.Invoke(new MethodInvoker(delegate { lPriceXRP.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
                     if (lSupplyXRP.InvokeRequired)
                         lSupplyXRP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyXRP.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " XRP"; else lSupplyXRP.Text = "---"; }));
                     if (lBorrowXRP.InvokeRequired)
                         lBorrowXRP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowXRP.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " XRP"; else lBorrowXRP.Text = "---"; }));
+                    mytokenBalances = await TokenBalances("ADA", BSCvADAcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
+                    if (lPriceADA.InvokeRequired)
+                        lPriceADA.Invoke(new MethodInvoker(delegate { lPriceADA.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
+                    if (lSupplyADA.InvokeRequired)
+                        lSupplyADA.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyADA.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " ADA"; else lSupplyADA.Text = "---"; }));
+                    if (lBorrowADA.InvokeRequired)
+                        lBorrowADA.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowADA.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " ADA"; else lBorrowADA.Text = "---"; }));
+                    mytokenBalances = await TokenBalances("DOGE", BSCvDOGEcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
+                    if (lPriceDOGE.InvokeRequired)
+                        lPriceDOGE.Invoke(new MethodInvoker(delegate { lPriceDOGE.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
+                    if (lSupplyDOGE.InvokeRequired)
+                        lSupplyDOGE.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDOGE.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DOGE"; else lSupplyDOGE.Text = "---"; }));
+                    if (lBorrowDOGE.InvokeRequired)
+                        lBorrowDOGE.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDOGE.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DOGE"; else lBorrowDOGE.Text = "---"; }));
+                    mytokenBalances = await TokenBalances("DOT", BSCvDOTcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
+                    if (lPriceDOT.InvokeRequired)
+                        lPriceDOT.Invoke(new MethodInvoker(delegate { lPriceDOT.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
+                    if (lSupplyDOT.InvokeRequired)
+                        lSupplyDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDOT.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lSupplyDOT.Text = "---"; }));
+                    if (lBorrowDOT.InvokeRequired)
+                        lBorrowDOT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDOT.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DOT"; else lBorrowDOT.Text = "---"; }));
                     mytokenBalances = await TokenBalances("LTC", BSCvLTCcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceLTC.InvokeRequired)
                         lPriceLTC.Invoke(new MethodInvoker(delegate { lPriceLTC.Text = "$" + mytokenBalances.PriceUSD.ToString("N1", CultureInfo.InvariantCulture); }));
                     if (lSupplyLTC.InvokeRequired)
                         lSupplyLTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyLTC.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " LTC"; else lSupplyLTC.Text = "---"; }));
                     if (lBorrowLTC.InvokeRequired)
                         lBorrowLTC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowLTC.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " LTC"; else lBorrowLTC.Text = "---"; }));
-                    mytokenBalances = await TokenBalances("LINK", BSCvLINKcontract, null);
-                    if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
-                    if (lPriceLINK.InvokeRequired)
-                        lPriceLINK.Invoke(new MethodInvoker(delegate { lPriceLINK.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
-                    if (lSupplyLINK.InvokeRequired)
-                        lSupplyLINK.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyLINK.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " LINK"; else lSupplyLINK.Text = "---"; }));
-                    if (lBorrowLINK.InvokeRequired)
-                        lBorrowLINK.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowLINK.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " LINK"; else lBorrowLINK.Text = "---"; }));
                     mytokenBalances = await TokenBalances("BCH", BSCvBCHcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceBCH.InvokeRequired)
                         lPriceBCH.Invoke(new MethodInvoker(delegate { lPriceBCH.Text = "$" + mytokenBalances.PriceUSD.ToString("N1", CultureInfo.InvariantCulture); }));
                     if (lSupplyBCH.InvokeRequired)
                         lSupplyBCH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBCH.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BCH"; else lSupplyBCH.Text = "---"; }));
                     if (lBorrowBCH.InvokeRequired)
                         lBorrowBCH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBCH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BCH"; else lBorrowBCH.Text = "---"; }));
+                    mytokenBalances = await TokenBalances("LINK", BSCvLINKcontract, null);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
+                    if (lPriceLINK.InvokeRequired)
+                        lPriceLINK.Invoke(new MethodInvoker(delegate { lPriceLINK.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
+                    if (lSupplyLINK.InvokeRequired)
+                        lSupplyLINK.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyLINK.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " LINK"; else lSupplyLINK.Text = "---"; }));
+                    if (lBorrowLINK.InvokeRequired)
+                        lBorrowLINK.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowLINK.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " LINK"; else lBorrowLINK.Text = "---"; }));
                     mytokenBalances = await TokenBalances("FIL", BSCvFILcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceFIL.InvokeRequired)
                         lPriceFIL.Invoke(new MethodInvoker(delegate { lPriceFIL.Text = "$" + mytokenBalances.PriceUSD.ToString("N2", CultureInfo.InvariantCulture); }));
                     if (lSupplyFIL.InvokeRequired)
@@ -252,7 +303,7 @@ namespace VenusYield
                         lBorrowFIL.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowFIL.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " FIL"; else lBorrowFIL.Text = "---"; }));
                     mytokenBalances = await TokenBalances("SXP", BSCvSXPcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceSXP.InvokeRequired)
                         lPriceSXP.Invoke(new MethodInvoker(delegate { lPriceSXP.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
                     if (lSupplySXP.InvokeRequired)
@@ -261,7 +312,7 @@ namespace VenusYield
                         lBorrowSXP.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowSXP.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " SXP"; else lBorrowSXP.Text = "---"; }));
                     mytokenBalances = await TokenBalances("BETH", BSCvBETHcontract, null);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceBETH.InvokeRequired)
                         lPriceBETH.Invoke(new MethodInvoker(delegate { lPriceBETH.Text = "$" + mytokenBalances.PriceUSD.ToString("N0", CultureInfo.InvariantCulture); }));
                     if (lSupplyBETH.InvokeRequired)
@@ -270,7 +321,7 @@ namespace VenusYield
                         lBorrowBETH.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBETH.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BETH"; else lBorrowBETH.Text = "---"; }));
                     mytokenBalances = await TokenBalances("USDT", BSCvUSDTcontract, vTokenService);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceUSDT.InvokeRequired)
                         lPriceUSDT.Invoke(new MethodInvoker(delegate { lPriceUSDT.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
                     if (lSupplyUSDT.InvokeRequired)
@@ -279,31 +330,31 @@ namespace VenusYield
                         lBorrowUSDT.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowUSDT.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " USDT"; else lBorrowUSDT.Text = "---"; }));
                     mytokenBalances = await TokenBalances("USDC", BSCvUSDCcontract, vTokenService);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceUSDC.InvokeRequired)
                         lPriceUSDC.Invoke(new MethodInvoker(delegate { lPriceUSDC.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
                     if (lSupplyUSDC.InvokeRequired)
                         lSupplyUSDC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyUSDC.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " USDC"; else lSupplyUSDC.Text = "---"; }));
                     if (lBorrowUSDC.InvokeRequired)
                         lBorrowUSDC.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowUSDC.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " USDC"; else lBorrowUSDC.Text = "---"; }));
-                    mytokenBalances = await TokenBalances("DAI", BSCvDAIcontract, vTokenService);
-                    if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
-                    if (lPriceDAI.InvokeRequired)
-                        lPriceDAI.Invoke(new MethodInvoker(delegate { lPriceDAI.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
-                    if (lSupplyDAI.InvokeRequired)
-                        lSupplyDAI.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDAI.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DAI"; else lSupplyDAI.Text = "---"; }));
-                    if (lBorrowDAI.InvokeRequired)
-                        lBorrowDAI.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDAI.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DAI"; else lBorrowDAI.Text = "---"; }));
                     mytokenBalances = await TokenBalances("BUSD", BSCvBUSDcontract, vTokenService);
                     if (worker.CancellationPending) { e.Cancel = true; break; }
-                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD;
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
                     if (lPriceBUSD.InvokeRequired)
                         lPriceBUSD.Invoke(new MethodInvoker(delegate { lPriceBUSD.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
                     if (lSupplyBUSD.InvokeRequired)
                         lSupplyBUSD.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyBUSD.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " BUSD"; else lSupplyBUSD.Text = "---"; }));
                     if (lBorrowBUSD.InvokeRequired)
                         lBorrowBUSD.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowBUSD.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " BUSD"; else lBorrowBUSD.Text = "---"; }));
+                    mytokenBalances = await TokenBalances("DAI", BSCvDAIcontract, vTokenService);
+                    if (worker.CancellationPending) { e.Cancel = true; break; }
+                    TotalSupplyUSD += mytokenBalances.SupplyUSD; TotalBorrowUSD += mytokenBalances.BorrowUSD; TotalLimitUSD += mytokenBalances.SupplyUSD * 0.6;
+                    if (lPriceDAI.InvokeRequired)
+                        lPriceDAI.Invoke(new MethodInvoker(delegate { lPriceDAI.Text = "$" + mytokenBalances.PriceUSD.ToString("N3", CultureInfo.InvariantCulture); }));
+                    if (lSupplyDAI.InvokeRequired)
+                        lSupplyDAI.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Supply != 0) lSupplyDAI.Text = mytokenBalances.Supply.ToString("N2", CultureInfo.InvariantCulture) + " DAI"; else lSupplyDAI.Text = "---"; }));
+                    if (lBorrowDAI.InvokeRequired)
+                        lBorrowDAI.Invoke(new MethodInvoker(delegate { if (mytokenBalances.Borrow != 0) lBorrowDAI.Text = mytokenBalances.Borrow.ToString("N2", CultureInfo.InvariantCulture) + " DAI"; else lBorrowDAI.Text = "---"; }));
                     //VAI
                     double PriceVAI = 1.0;
                     Contract VAIContract = web3.Eth.GetContract(ABIVAItoken, BSCVAIcontract);
@@ -334,7 +385,7 @@ namespace VenusYield
                     if (lBalance.InvokeRequired)
                         lBalance.Invoke(new MethodInvoker(delegate { lBalance.Text = "Balance: " + "$" + Balance.ToString("N0", CultureInfo.InvariantCulture); }));
                     //Limit
-                    BorrowLimit = (TotalBorrowUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyUSD * 0.6);
+                    BorrowLimit = (TotalBorrowUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / TotalLimitUSD;
                     if (lLimit.InvokeRequired) lLimit.Invoke(new MethodInvoker(delegate { lLimit.Text = "Limit: " + BorrowLimit.ToString("P2", CultureInfo.InvariantCulture); }));
                     if (pbLimit.InvokeRequired) pbLimit.Invoke(new MethodInvoker(delegate { var Limit = BorrowLimit;  if(BorrowLimit > 1) Limit = 1; pbLimit.Value = (int)(Limit * 100); pbLimit.ForeColor = Color.FromArgb(249, 190, 86); }));
                     //Report
@@ -380,7 +431,7 @@ namespace VenusYield
                 ReadSettings();
                 bgwVenusYield.CancelAsync();
             };
-            newFrm.Show();
+            newFrm.Show(this);
         }
 
         private void Form1_Resize(object sender, EventArgs e)
@@ -406,15 +457,37 @@ namespace VenusYield
             if (ReadMsg == null || ReadMsg.Type != MessageType.Text)
                 return;
 
-            switch (ReadMsg.Text.Split(' ').First())
+            try
             {
-                case "/report":
-                    await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Balance: ${Balance.ToString("N0", CultureInfo.InvariantCulture)}");
-                    await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Limit: {BorrowLimit.ToString("P2", CultureInfo.InvariantCulture)}");
-                    break;
-                default:
-                    break;
+                switch (ReadMsg.Text.Split(' ').First())
+                {
+                    case "/report":
+                        await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Balance: ${Balance.ToString("N0", CultureInfo.InvariantCulture)}");
+                        await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Limit: {BorrowLimit.ToString("P2", CultureInfo.InvariantCulture)}");
+                        break;
+                    case "/dominance":
+                        CoinGeckoGlobal coinGeckoGlobal = new CoinGeckoGlobal();
+                        CoinGeckoDefi coinGeckoDefi = new CoinGeckoDefi();
+                        WebClient webclientx = new WebClient();
+                        coinGeckoGlobal = CoinGeckoGlobal.FromJson(webclientx.DownloadString(urlCoinGeckoGlobal));
+                        coinGeckoGlobal.Data.MarketCapPercentage.TryGetValue("btc", out double valuebtc);
+                        await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"BTC.D: {valuebtc.ToString("F1", CultureInfo.InvariantCulture)}");
+                        coinGeckoDefi = CoinGeckoDefi.FromJson(webclientx.DownloadString(urlCoinGeckoDefi));
+                        await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"DEFI.D: {coinGeckoDefi.Data.DefiDominance.ToString("F1", CultureInfo.InvariantCulture)}");
+                        coinGeckoGlobal.Data.MarketCapPercentage.TryGetValue("usdt", out double valueusdt);
+                        await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"USDT.D: {valueusdt.ToString("F1", CultureInfo.InvariantCulture)}");
+                        break;
+                    case "/sentiment":
+                        FandG indexFandG = new FandG();
+                        WebClient webclienty = new WebClient();
+                        indexFandG = FandG.FromJson(webclienty.DownloadString(urlFandG));
+                        await botClient.SendTextMessageAsync(ReadMsg.Chat.Id, $"Market: {indexFandG.Data[0].ValueClassification} ({indexFandG.Data[0].Value.ToString("F0", CultureInfo.InvariantCulture)})");
+                        break;
+                    default:
+                        break;
+                }
             }
+            catch (Exception ex) { Console.WriteLine("#3 {0}", ex.Message.ToString());}
         }
 
         private static void BotTelegramError(object sender, ReceiveErrorEventArgs errorEventArgs)
@@ -603,5 +676,56 @@ namespace VenusYield
     {
         [JsonProperty("addresses")]
         public List<object> Addresses { get; set; }
+    }
+
+    public partial class CoinGeckoGlobal
+    {
+        [JsonProperty("data")]
+        public CoinGeckoGlobalData Data { get; set; }
+
+        public static CoinGeckoGlobal FromJson(string json) => JsonConvert.DeserializeObject<CoinGeckoGlobal>(json);
+    }
+
+    public partial class CoinGeckoGlobalData
+    {
+        [JsonProperty("market_cap_percentage")]
+        public Dictionary<string, double> MarketCapPercentage { get; set; }
+    }
+
+    public partial class CoinGeckoDefi
+    {
+        [JsonProperty("data")]
+        public CoinGeckoDefiData Data { get; set; }
+
+        public static CoinGeckoDefi FromJson(string json) => JsonConvert.DeserializeObject<CoinGeckoDefi>(json);
+    }
+
+    public partial class CoinGeckoDefiData
+    {
+        [JsonProperty("defi_dominance")]
+        public double DefiDominance { get; set; }
+    }
+
+    public partial class FandG
+    {
+        [JsonProperty("data")]
+        public List<FandGDatum> Data { get; set; }
+
+        public static FandG FromJson(string json) => JsonConvert.DeserializeObject<FandG>(json);
+    }
+
+    public partial class FandGDatum
+    {
+        [JsonProperty("value")]
+        public long Value { get; set; }
+
+        [JsonProperty("value_classification")]
+        public string ValueClassification { get; set; }
+
+        [JsonProperty("timestamp")]
+        public long Timestamp { get; set; }
+
+        [JsonProperty("time_until_update")]
+        public long TimeUntilUpdate { get; set; }
     }
 }

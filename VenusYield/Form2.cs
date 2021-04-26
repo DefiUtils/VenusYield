@@ -13,6 +13,7 @@ namespace VenusYield
         public Form2()
         {
             InitializeComponent();
+            CenterToParent();
 
             var systemPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             try
@@ -33,32 +34,30 @@ namespace VenusYield
             catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
         }
 
-        private void lGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LGithub_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://github.com/J1Mtonic/VenusYield");
         }
 
-        private void lVenusCommunity_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LVenusCommunity_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://community.venus.io");
         }
 
-        private void lJ1MtonicTwitter_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void LJ1MtonicTwitter_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             Process.Start("https://twitter.com/J1Mtonic");
         }
 
-        private void bGetID_Click(object sender, EventArgs e)
+        private void BGetID_Click(object sender, EventArgs e)
         {
             if (tblTelegramBotAPI.Text != "")
             {
                 string telegramGetUpdates = "https://api.telegram.org/bot" + tblTelegramBotAPI.Text + "/getUpdates";
-                Telegram telegramMsg = new Telegram();
                 WebClient webclient = new WebClient();
-
                 try
                 {
-                    telegramMsg = Telegram.FromJson(webclient.DownloadString(telegramGetUpdates));
+                    Telegram telegramMsg = Telegram.FromJson(webclient.DownloadString(telegramGetUpdates));
                     tbTelegramChatID.Text = telegramMsg.Result[0].Message.Chat.Id.ToString();
                 }
                 catch (Exception ex) { Console.WriteLine("{0}", ex.Message.ToString()); }
