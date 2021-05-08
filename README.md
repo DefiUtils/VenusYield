@@ -4,7 +4,7 @@
 
 The aim of this "VenusYield" APP is to warn you through a Telegram message when your Supply/Borrow/Mint ratio is outside a given percentage in order to avoid a liquidation (currently a tough 10% of your underwater collaterals).
 
-"VenusYield" is released as an open source software developed on Visual C# 16.9 (.NET Framework 4.8); Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.5"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.5.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
+"VenusYield" is released as an open source software developed on Visual C# 16.9 (.NET Framework 4.8); Compile it for yourself or download the packed Windows 10 executable here ["VenusYield v0.6"](https://github.com/J1Mtonic/VenusYield/blob/main/Release/VenusYield.v0.6.zip) --> Is absolutely clean but "Don´t trust. [Verify](https://opentip.kaspersky.com)".
 
 Now, let me show you how it looks like and how it works:
 
@@ -19,7 +19,15 @@ Then it fetches information from different places:
  - Price vTokens: Binance API (USDT pairs)(real-time) --> Wanted to extract it from there to gain some reaction time against 'Venus Price Oracle'
  - Price StableCoins: Venus API
  - Supply/Borrow/Mint/Vault: Querying (Web3) Binance Smartchain with Nethereum .Net library and using the Binance free 'BSCendpoint'
- - Limit: Calculation is given by (TotalBorrowInUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyInUSD * 0.6)
+ - Limit: Calculation is given by (TotalBorrowInUSD + BorrowVAI + VAIvault - (VAIvault - VAIminted)) / (TotalSupplyInUSD * Factor)
+
+Factors:
+- 80%
+BTC, ETH, BNB, XVS, SXP, USDT, BUSD, USDC
+- 60%
+XRP, ADA, DOT, LTC, BCH, LINK, FIL, BETH, DAI
+- 40%
+DOGE
  
 Let´s have an eye on 'Settings':
  
@@ -72,3 +80,9 @@ CHANGES from v0.4 to v0.5
 - Added "/sentiment" command for Telegram Bot to get Crypto Fear and Greed Index value (fetched from alternative.me/crypto)
 - Added a compressed view by clicking on VenusYield logo
 - Improved stability
+
+CHANGES from v0.5 to v0.6
+- Adjusted Factors from 60% to 80% as per VIP-22 on $BTC, $ETH, $BNB, $XVS, $SXP, $USDT, $BUSD, $USDC
+- Adjusted Factor from 60% to 40% as per VIP-21 on $DOGE
+- Fixed issue on Supply/Borrow vDOGE calculation
+- Minor changes un VenusYield UI
